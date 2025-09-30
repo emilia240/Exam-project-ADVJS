@@ -3,7 +3,7 @@
         <h1>Login</h1>
     </div>
     <!--Prevent is for not refreshing the page and losing the input data-->
-    <form @submit.prevent="loginUser">
+    <form @submit.prevent="loginUser" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <input type="email" v-model="email" placeholder="Email" required>
         <input type="password" v-model="password" placeholder="Password" required>
         <button type="submit" :disabled="loading">Login</button>
