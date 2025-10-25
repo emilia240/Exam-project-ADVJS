@@ -2,36 +2,21 @@
 @import "tailwindcss";
 
 
+/* APP CONTAINER - Mobile First */
 #app {
-  max-width: 1280px;
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  max-width: 100%; /* Full width on mobile */
 }
 
-a,
-.green {
+
+/* Remove Vue's default link styles - replace with your design */
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+  color: var(--color-accent);
+  transition: color 0.3s ease;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr;
-    padding: 0 2rem;
-  }
+a:hover {
+  color: var(--color-text-purple);
 }

@@ -22,12 +22,16 @@ const handleLogout = () => {
 <style scoped>
 
 .auth-button {
- margin: 0 16px;
- padding: 8px 16px;
- background-color: #42b983;
- border-radius: 5px;
- border:none;
+ color: var(--color-text-light);
+ font-family: var(--font-sans); 
+font-size: var(--font-size-sm);
+text-decoration: none;
+transition: color 0.3s ease;
+padding: 0.5rem 1rem;
+}
 
+.auth-button:hover {
+color: var(--color-lavender);
 }
 
 </style>

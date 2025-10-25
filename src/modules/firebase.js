@@ -1,25 +1,18 @@
-// import {onMounted, ref} from 'vue'
-//always import from the top
-
-//initialize Firebase ----sth that was copied from firebase console(at one point)
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
-import { getFirestore/* , collection, onSnapshot, addDoc, deleteDoc, doc */ } from "firebase/firestore";
+import { getFirestore} from "firebase/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBWKfDsB11mhhA2GLokfo71eMcBTgUwte4",
-  authDomain: "w38-project.firebaseapp.com",
-  projectId: "w38-project",
-  storageBucket: "w38-project.firebasestorage.app",
-  messagingSenderId: "958444691036",
-  appId: "1:958444691036:web:0b9aaf7c1bd1f6a9265099"
+  apiKey: "AIzaSyB-wjhHC8wE3bzaoPD123fdS03brD9B4dM",
+  authDomain: "sleepapp-project.firebaseapp.com",
+  projectId: "sleepapp-project",
+  storageBucket: "sleepapp-project.firebasestorage.app",
+  messagingSenderId: "165782357939",
+  appId: "1:165782357939:web:3e3639cf61303165bfedc6"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); //firestore database
+const db = getFirestore(app); 
 
 
 
