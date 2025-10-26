@@ -24,6 +24,18 @@ const router = createRouter({
       component: () => import('../views/Dashboard.vue'),
       meta: { requiresAuth: true } //this route requires authentication
     },
+     {
+      path: '/sleep-logs',
+      name: 'sleep-logs',
+      component: () => import('../views/SleepLogListView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/sleep-logs/:id',
+      name: 'sleep-log-detail',
+      component: () => import('../views/SleepLogDetailView.vue'),
+      meta: { requiresAuth: true }
+    },
   ],
 })
 

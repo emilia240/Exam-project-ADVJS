@@ -168,6 +168,36 @@ const bannerHeader = ref(null)
 const didYouKnowIcon = ref(null)
 const footerHeader = ref(null)
 
+// Logo continuous floating animation - Never stops
+const startLogoFloating = () => {
+  const logo = document.querySelector('.hero-logo')
+  console.log('Logo found:', logo)
+  if (!logo) return
+  
+  // Continuous sine wave animation
+  let startTime = Date.now()
+  
+  const continuousFloat = () => {
+    const elapsed = (Date.now() - startTime) / 3000 // Time in seconds
+    const amplitude = 5 // How high/low it goes (5px)
+    const frequency = 1 // How fast it oscillates (adjust for speed)
+    
+    // Calculate smooth sine wave position
+    const yPosition = Math.sin(elapsed * frequency * 2 * Math.PI) * amplitude
+    
+    // Apply transform directly for smooth continuous movement
+    logo.style.transform = `translateY(${yPosition}px)`
+    
+    // Continue the animation
+    requestAnimationFrame(continuousFloat)
+  }
+  
+  // Start floating immediately
+  setTimeout(() => {
+    continuousFloat()
+  }, 1000)
+}
+
 // Intersection Observer for scroll animations
 const createScrollObserver = (element, animationCallback) => {
   const observer = new IntersectionObserver(
@@ -255,6 +285,9 @@ const setupHoverAnimations = () => {
 }
 
 onMounted(() => {
+  // Start logo floating animation
+   startLogoFloating()
+
   // Hero Text Animation - Simple slide up and fade in
   if (heroText.value) {
     // Set initial state

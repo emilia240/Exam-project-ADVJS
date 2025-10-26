@@ -58,7 +58,7 @@ body {
   color: var(--color-text-light);
   background: var(--color-background);
   font-family: var(--font-sans); /* Anuphan as default */
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   line-height: 1.6;
   transition: color 0.3s ease, background-color 0.3s ease;
   -webkit-font-smoothing: antialiased;

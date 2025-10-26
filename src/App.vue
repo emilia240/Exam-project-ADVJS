@@ -7,20 +7,18 @@ const route = useRoute()
 
 // Hide navigation on LoginView
 const showNavigation = computed(() => {
-  return route.name !== 'login'
+  return route.name !== 'login' && route.name !== 'dashboard'
 }) 
 </script>
 
 
 <template>
   <div class="app-container">
-    <!-- use teleport for the new sleep log component, its gut! -->
-    <!-- Minimal Navigation -->
     <nav v-if="showNavigation" class="nav-container">
       <div class="nav-links">
         <RouterLink to="/dashboard" class="nav-link">Dashboard</RouterLink>
 
-        <AuthButton />
+        <AuthButton :showIcon="false" /> <!-- prop to control icon visibility -->
       </div>
     </nav>
 
@@ -31,7 +29,7 @@ const showNavigation = computed(() => {
 <style scoped>
 .app-container {
   min-height: 100vh;
-  background-color: var(--color-background); /* midnight */
+  background-color: var(--color-background);
 }
 
 /* Minimal Navigation */
@@ -61,8 +59,25 @@ const showNavigation = computed(() => {
   color: var(--color-lavender);
 }
 
-/* Remove active state styling for minimal look */
 .nav-link.router-link-active {
   color: var(--color-text-light);
 }
+
+/* AuthButton styling for HOME VIEW (simple style) */
+.auth-button {
+  color: var(--color-text-light) !important;
+  font-family: var(--font-sans) !important; 
+  font-size: var(--font-size-sm) !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+  padding: 0.5rem 1rem !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.auth-button:hover {
+  color: var(--color-lavender) !important;
+}
+
 </style>
