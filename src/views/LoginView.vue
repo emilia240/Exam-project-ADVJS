@@ -148,18 +148,23 @@
 import { ref, watch, onMounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuth } from '../modules/useAuth'
-import { animate } from 'animejs'
+import { useLoginAnimations } from '@/composables/animations/useLoginAnimations'
+
 
 const router = useRouter()
 const { login, register, authError, loading, isLoggedIn, currentUser } = useAuth()
 
+// IMPORT ALL ANIMATION LOGIC
+const { 
+  loginCard, 
+  successMessage, 
+  logoRef, 
+  startEntranceAnimations, 
+  handleSuccessTransition 
+} = useLoginAnimations()
+
 // Form toggle state
 const isRegistering = ref(false)
-
-// Template refs for animations
-const loginCard = ref(null)
-const successMessage = ref(null)
-const logoRef = ref(null)
 
 // Login form data
 const email = ref('')
@@ -171,115 +176,20 @@ const regBirthDate = ref('')
 const regEmail = ref('')
 const regPassword = ref('')
 
-// Entrance animations when component mounts
+
+
+// Start animations when component mounts
 onMounted(() => {
-  // Set initial states (invisible)
-  if (loginCard.value) {
-    animate(loginCard.value, {
-      opacity: 0,
-      y: 80,
-      scale: 0.9,
-      duration: 0
-    })
-  }
-  
-  if (logoRef.value) {
-    animate(logoRef.value, {
-      opacity: 0,
-      scale: 0.8,
-      rotate: -10,
-      duration: 0
-    })
-  }
-  
-  // Start entrance sequence
-  setTimeout(() => {
-    // Step 1: Card swipes up from below
-    animate(loginCard.value, {
-      opacity: [0, 1],
-      y: [80, 0],
-      scale: [0.9, 1],
-      duration: 800,
-      ease: 'out(3)',
-      complete: () => {
-        // Step 2: Logo wiggles after card appears
-        animateLogo()
-      }
-    })
-  }, 200)
+  startEntranceAnimations()
 })
 
-const animateLogo = () => {
-  // Logo fade in and wiggle sequence
-  animate(logoRef.value, {
-    opacity: [0, 1],
-    scale: [0.8, 1.1, 1],
-    rotate: [-10, 5, -3, 0],
-    duration: 1000,
-    ease: 'spring(1, 80, 10, 0)'
-  })
-}
-
-// Watch for successful login/register and trigger transition
+// Watch for successful login and trigger transition
 watch(isLoggedIn, (newValue) => {
   if (newValue && (successMessage.value || loginCard.value)) {
     handleSuccessTransition()
   }
 })
 
-const handleSuccessTransition = () => {
-  // Step 1: Animate success message in (if it exists)
-  if (successMessage.value) {
-    animate(successMessage.value, {
-      scale: [0.8, 1.1, 1],
-      opacity: [0, 1],
-      duration: 600,
-      ease: 'spring(1, 80, 10, 0)'
-    })
-  }
-
-    // Step 2: Wait 1.5s, then start exit animation
-  setTimeout(() => {
-    // Fade out the login card
-    animate(loginCard.value, {
-      opacity: 0,
-      scale: 0.9,
-      y: -30,
-      duration: 300,
-      ease: 'out(2)',
-      complete: () => {
-        // Step 3: Show loading overlay
-        showLoadingOverlay()
-      }
-    })
-  }, 1500)
-}
-
-const showLoadingOverlay = () => {
-  // Create loading overlay element
-  const overlay = document.createElement('div')
-  overlay.className = 'loading-overlay'
-  overlay.innerHTML = `
-    <div class="loading-content">
-      <div class="loading-spinner"></div>
-      <p class="loading-text">Loading Dashboard...</p>
-    </div>
-  `
-  document.body.appendChild(overlay)
-  
-  // Animate overlay in
-  animate(overlay, {
-    opacity: [0, 1],
-    duration: 400,
-    ease: 'out(2)',
-    complete: () => {
-      // Step 4: After 2s, navigate to dashboard
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 2000)
-    }
-  })
-}
 
 
 // Toggle between login and register forms
@@ -294,9 +204,7 @@ const loginUser = () => {
   login(email.value, password.value)
 }
 
-
-
-// Register function  
+// Register function
 const registerUser = () => {
   register(regEmail.value, regPassword.value, {
     userName: regUserName.value,

@@ -5,6 +5,9 @@
         <!-- Title -->
         <h2 class="form-title">Log Your Sleep</h2>
         
+        <!-- Error Display -->
+        <span v-if="showError" class="error-message">{{ errorMessage }}</span>
+        
         <!-- Time Inputs Section -->
         <div class="time-section">
           <div class="bedtime-group">
@@ -14,6 +17,13 @@
           <div class="waketime-group">
             <h3 class="section-header">Waketime</h3>
             <input type="time" v-model="wakeTime" class="time-input">
+          </div>
+          <!-- Total Sleep Time Display -->
+          <div class="sleep-total-group">
+            <h3 class="section-header">Total Sleep Time</h3>
+            <div class="sleep-total-display">
+              {{ totalSleepTime }}
+            </div>
           </div>
         </div>
         
@@ -43,6 +53,7 @@
               v-model="dreamJournal" 
               placeholder="Describe your dreams..."
               class="dream-textarea"
+              @input="resetError"
             ></textarea>
           </div>
         </div>
@@ -56,85 +67,63 @@
               v-model="tags" 
               placeholder="e.g., vivid, nightmare, lucid"
               class="tags-input"
+              @input="resetError"
             >
           </div>
         </div>
         
         <!-- Action Buttons -->
         <div class="button-section">
-          <button @click="saveSleepLog" class="save-button">Save sleep log</button>
+          <button @click="saveSleepLog" :disabled="saving" class="save-button">
+            {{ saving ? 'Saving...' : 'Save sleep log' }}
+          </button>
           <button @click="closeForm" class="cancel-button">Cancel</button>
         </div>
+        
       </div>
     </div>
   </Teleport>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { useSleepLogs } from '@/modules/useSleepLogs'
 
-// Form state
-const isOpen = ref(false)
-const bedTime = ref('')
-const wakeTime = ref('')
-const sleepQuality = ref(5)
-const dreamJournal = ref('')
-const tags = ref('')
+const { 
+  // Form state
+  isOpen,
+  bedTime,
+  wakeTime,
+  sleepQuality,
+  dreamJournal,
+  tags,
+  
+  // Computed values
+  totalSleepTime,
+  
+  // Error handling
+  showError,
+  errorMessage,
+  resetError,
+  
+  // Form actions
+  openForm,
+  closeForm,
+  saveSleepLog,
+  handleOverlayClick,
+  
+  // Loading state
+  saving
 
-// Calculated field
-const hoursSlept = computed(() => {
-  if (bedTime.value && wakeTime.value) {
-    // Calculate hours between bedTime and wakeTime
-    const bed = new Date(`2024-01-01 ${bedTime.value}`)
-    const wake = new Date(`2024-01-01 ${wakeTime.value}`)
-    
-    // Handle overnight sleep (wakeTime is next day)
-    if (wake < bed) {
-      wake.setDate(wake.getDate() + 1)
-    }
-    
-    const diffMs = wake - bed
-    return (diffMs / (1000 * 60 * 60)).toFixed(1) // Convert to hours
-  }
-  return 0
-})
+} = useSleepLogs()
 
-// Methods
-const openForm = () => {
-  isOpen.value = true
-}
 
-const closeForm = () => {
-  isOpen.value = false
-  resetForm()
-}
-
-const handleOverlayClick = (event) => {
-  // Close if clicking outside the form
-  if (event.target === event.currentTarget) {
-    closeForm()
-  }
-}
-
-const saveSleepLog = () => {
-  // Save to Firestore
-  // Close form
-  // Emit success event
-}
-
-const resetForm = () => {
-  bedTime.value = ''
-  wakeTime.value = ''
-  sleepQuality.value = 5
-  dreamJournal.value = ''
-  tags.value = ''
-}
 
 // Expose methods for parent components
 defineExpose({
   openForm,
   closeForm
 })
+
 </script>
 
 <style scoped>
@@ -193,6 +182,48 @@ defineExpose({
   border-radius: 0.5rem !important;
   padding: 0.75rem !important;
   font-family: var(--font-sans) !important;
+}
+
+/* total sleep display */
+
+.sleep-total-group {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.sleep-total-display {
+  background-color: #0A1123 !important;
+  color: var(--color-lavender) !important;
+  border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+  min-height: 2.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.time-section {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 1rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.error-message {
+  display: block !important;
+  background-color: color-mix(in srgb, #dc2663 15%, transparent) !important;
+  border: 1px solid color-mix(in srgb, #dc2663 40%, transparent) !important;
+  color: #ff6b6b !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-sm) !important;
+  text-align: center !important;
+  padding: 0.75rem !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0.5rem !important;
 }
 
 /* Quality Slider */

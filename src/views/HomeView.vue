@@ -1,43 +1,43 @@
 <template>
   <main class="min-h-screen">
     <!-- Hero Section with Background Image & Gradient -->
-    <section class="hero-section relative w-screen overflow-hidden flex justify-center items-center">
+    <section class="hero-section relative !w-screen overflow-hidden flex justify-center items-center">
       <!-- Background Image with Gradient Overlay -->
       <div class="absolute inset-0 bg-hero-image bg-cover bg-center bg-no-repeat"></div>
       <div class="absolute inset-0 bg-hero-gradient"></div>
       
       <!-- Hero Content -->
-      <div class="hero-content relative z-10 text-center !px-4 !max-w-4xl !mx-auto">
+      <div class="hero-content relative !z-10 text-center !px-4 !max-w-4xl !mx-auto">
         <!-- Logo -->
         <img 
           src="@/assets/img/Logo-somnus.svg" 
           alt="Somnus Logo" 
-          class="hero-logo !block !mx-auto !mb-24 md:!mb-32 lg:!mb-40"
+          class="hero-logo block !mx-auto !mb-24 !md:mb-32 !lg:mb-40"
         >
         
         <!-- Hero Text -->
-        <p ref="heroText" class="hero-text !text-center !leading-relaxed !mx-auto !mb-16 md:!mb-20 !max-w-2xl">
+        <p ref="heroText" class="hero-text text-center leading-relaxed !mx-auto !mb-16 !md:mb-20 !max-w-2xl">
           A minimalist haven for tracking your sleep patterns and journaling your dreams. 
           Understand your rest, unlock your subconscious.
         </p>
         
         <!-- CTA Button -->
-        <button class="cta-button !font-semibold !px-8 !py-4 md:!px-12 md:!py-5 !rounded-xl !border-none !cursor-pointer !transition-all !duration-300 hover:!-translate-y-0.5">
+        <router-link to="/login" class="cta-button !font-semibold !px-8 !py-4 !md:px-12 !md:py-5 !rounded-xl !border-none !cursor-pointer !transition-all !duration-300 !hover:-translate-y-0.5 !inline-block !no-underline">
           Get Started
-        </button>
+        </router-link>
       </div>
     </section>
 
     <!-- Features Section with Three Cards -->
-    <section class="features-section !py-8 md:!py-16 !px-4 lg:!px-8">
+    <section class="features-section !py-8 !md:py-16 !px-4 !lg:px-8">
       <div class="features-container !max-w-6xl !mx-auto">
         <!-- Cards Grid -->
-        <div class="features-grid !grid !grid-cols-1 md:!grid-cols-3 !gap-8 md:!gap-12">
+        <div class="features-grid grid grid-cols-1 md:grid-cols-3 !gap-8 !md:gap-12">
           
           <!-- Card 1 - Track Sleep -->
-          <div ref="card1" class="feature-card !text-center !p-8 !rounded-2xl">
+          <div ref="card1" class="feature-card text-center !p-8 rounded-2xl transition-transform duration-300 hover:-translate-y-2">
             <!-- Icon Circle -->
-            <div class="icon-circle !w-15 !h-15 !mx-auto !mb-6 !rounded-full !flex !items-center !justify-center">
+            <div class="icon-circle !w-15 !h-15 !mx-auto !mb-6 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300">
               <img 
                 src="@/assets/img/moon.svg" 
                 alt="Moon Icon" 
@@ -51,9 +51,9 @@
           </div>
 
           <!-- Card 2 - Journal Dreams -->
-          <div ref="card2" class="feature-card !text-center !p-8 !rounded-2xl">
+          <div ref="card2" class="feature-card text-center !p-8 rounded-2xl transition-transform duration-300 hover:-translate-y-2">
             <!-- Icon Circle -->
-            <div class="icon-circle !w-15 !h-15 !mx-auto !mb-6 !rounded-full !flex !items-center !justify-center">
+            <div class="icon-circle !w-15 !h-15 !mx-auto !mb-6 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300">
               <img 
                 src="@/assets/img/cloud.svg" 
                 alt="Cloud Icon" 
@@ -67,9 +67,9 @@
           </div>
 
           <!-- Card 3 - Find Patterns -->
-          <div ref="card3" class="feature-card !text-center !p-8 !rounded-2xl">
+          <div ref="card3" class="feature-card text-center !p-8 rounded-2xl transition-transform duration-300 hover:-translate-y-2">
             <!-- Icon Circle -->
-            <div class="icon-circle !w-15 !h-15 !mx-auto !mb-6 !rounded-full !flex !items-center !justify-center">
+            <div class="icon-circle !w-15 !h-15 !mx-auto !mb-6 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300">
               <img 
                 src="@/assets/img/star.svg" 
                 alt="Star Icon" 
@@ -87,39 +87,39 @@
     </section>
 
      <!-- Banner Section with Facts -->
-    <section class="banner-section !relative !py-8 md:!py-16 !px-4 lg:!px-8">
+    <section class="banner-section relative !py-10 !md:py-16 !px-6 !lg:px-10 overflow-hidden">
       
-      <div class="banner-container !max-w-6xl !mx-auto !relative !z-10">
+      <div class="banner-container !max-w-6xl !mx-auto relative !z-10">
         <!-- Section Header -->
-        <h2 ref="bannerHeader" class="banner-header !text-center !mb-12 md:!mb-16">Did you know?</h2>
+        <h2 ref="bannerHeader" class="banner-header text-center !mb-12 !md:mb-16">Did you know?</h2>
         
         <!-- Facts Content -->
-        <div class="facts-content !relative !py-12 md:!py-16 !px-8 md:!px-12 !rounded-2xl">
+        <div class="facts-content relative !py-14 !md:py-18 !px-10 !md:px-14 rounded-2xl">
           <!-- Scattered Background Icons - only 3, positioned over facts content -->
-          <img src="@/assets/img/moon.svg" alt="" class="scattered-icon moon-1">
-          <img src="@/assets/img/cloud.svg" alt="" class="scattered-icon cloud-1">
-          <img src="@/assets/img/star.svg" alt="" class="scattered-icon star-1">
-          
+          <img src="@/assets/img/moon.svg" alt="" class="scattered-icon moon-1 absolute !w-8 !h-8 opacity-20 z-10">
+          <img src="@/assets/img/cloud.svg" alt="" class="scattered-icon cloud-1 absolute !w-8 !h-8 opacity-20 z-10">
+          <img src="@/assets/img/star.svg" alt="" class="scattered-icon star-1 absolute !w-8 !h-8 opacity-20 z-10">
+
           <!-- Did You Know SVG - positioned at bottom center -->
-          <img ref="didYouKnowIcon" src="@/assets/img/did-you-know.svg" alt="" class="did-you-know-icon">
+          <img ref="didYouKnowIcon" src="@/assets/img/did-you-know.svg" alt="" class="did-you-know-icon absolute z-20 !mb-10 cursor-pointer transition-all duration-300">
           
           <!-- Facts Grid -->
-          <div class="facts-grid !grid !grid-cols-1 md:!grid-cols-3 !gap-8 md:!gap-12">
+          <div class="facts-grid grid grid-cols-1 md:grid-cols-3 !gap-8 !md:gap-12">
             
             <!-- Fact 1 -->
-            <div class="fact-item !text-center">
+            <div class="fact-item text-center">
               <h3 class="fact-header !mb-4">1/3</h3>
               <p class="fact-text">of your life is spent sleeping - that's about 26 years for the average person.</p>
             </div>
 
             <!-- Fact 2 -->
-            <div class="fact-item !text-center">
+            <div class="fact-item text-center">
               <h3 class="fact-header !mb-4">4-6</h3>
               <p class="fact-text">dreams per night on average, though most are forgotten within minutes of waking.</p>
             </div>
 
             <!-- Fact 3 -->
-            <div class="fact-item !text-center">
+            <div class="fact-item text-center">
               <h3 class="fact-header !mb-4">12%</h3>
               <p class="fact-text">of people dream entirely in black and white, while the rest dream in full color.</p>
             </div>
@@ -131,13 +131,13 @@
     </section>
 
     <!-- Footer Section -->
-    <footer class="footer-section !py-8 md:!py-16 !px-4 lg:!px-8">
+    <footer class="footer-section !py-8 !md:py-16 !px-4 !lg:px-8 !mt-12">
       <div class="footer-container !max-w-6xl !mx-auto">
         <!-- Footer Header -->
-        <h2 ref="footerHeader" class="footer-header !text-center !mb-8 md:!mb-16">Track your sleep. Decode your dreams.</h2>
+        <h2 ref="footerHeader" class="footer-header text-center !mb-8 !md:mb-16">Track your sleep. Decode your dreams.</h2>
         
         <!-- Footer Links -->
-        <div class="footer-links !grid !grid-cols-1 md:!grid-cols-3 !gap-4 md:!gap-8 !text-center">
+        <div class="footer-links grid grid-cols-1 md:grid-cols-3 !gap-4 !md:gap-8 text-center">
           
           <!-- Privacy Policy -->
           <p class="footer-text">Privacy Policy</p>
@@ -156,279 +156,47 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { animate, stagger } from 'animejs'
+import { onMounted } from 'vue';
+import { useHomeAnimations } from '@/composables/animations/useHomeAnimations';
+import { useLogoAnimations } from '@/composables/animations/shared/useLogoAnimations';
 
-// Template refs for animations
-const heroText = ref(null)
-const card1 = ref(null)
-const card2 = ref(null)
-const card3 = ref(null)
-const bannerHeader = ref(null)
-const didYouKnowIcon = ref(null)
-const footerHeader = ref(null)
+// IMPORT ALL ANIMATION LOGIC
+const {
+  heroText,
+  card1,
+  card2,
+  card3,
+  bannerHeader,
+  didYouKnowIcon,
+  footerHeader,
 
-// Logo continuous floating animation - Never stops
-const startLogoFloating = () => {
-  const logo = document.querySelector('.hero-logo')
-  console.log('Logo found:', logo)
-  if (!logo) return
-  
-  // Continuous sine wave animation
-  let startTime = Date.now()
-  
-  const continuousFloat = () => {
-    const elapsed = (Date.now() - startTime) / 3000 // Time in seconds
-    const amplitude = 5 // How high/low it goes (5px)
-    const frequency = 1 // How fast it oscillates (adjust for speed)
-    
-    // Calculate smooth sine wave position
-    const yPosition = Math.sin(elapsed * frequency * 2 * Math.PI) * amplitude
-    
-    // Apply transform directly for smooth continuous movement
-    logo.style.transform = `translateY(${yPosition}px)`
-    
-    // Continue the animation
-    requestAnimationFrame(continuousFloat)
-  }
-  
-  // Start floating immediately
-  setTimeout(() => {
-    continuousFloat()
-  }, 1000)
-}
+  animateHeroText,
+  initializeScrollAnimations
+} = useHomeAnimations();
 
-// Intersection Observer for scroll animations
-const createScrollObserver = (element, animationCallback) => {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animationCallback()
-          observer.unobserve(entry.target) // Only animate once
-        }
-      })
-    },
-    {
-      threshold: 0.01, // Trigger when 1% of element is visible
-      rootMargin: '0px 0px -10px 0px' // Start animation 100px before element comes into view
-    }
-  )
-  
-  if (element) {
-    observer.observe(element)
-  }
-}
-
-// Fun hover animations for circles and did-you-know icon
-const setupHoverAnimations = () => {
-  // Feature card circle hover animations
-  const circles = document.querySelectorAll('.icon-circle')
-  
-  circles.forEach((circle) => {
-    const icon = circle.querySelector('img')
-    
-    circle.addEventListener('mouseenter', () => {
-      // Bounce and rotate the circle
-      animate(circle, {
-        scale: 1.1,
-        rotate: '360deg',
-        duration: 600,
-        ease: 'spring(1, 80, 10, 0)'
-      })
-      
-      // Pulse the icon inside
-      animate(icon, {
-        scale: [1, 1.2, 1],
-        duration: 400,
-        ease: 'out(2)'
-      })
-    })
-    
-    circle.addEventListener('mouseleave', () => {
-      // Return to normal
-      animate(circle, {
-        scale: 1,
-        rotate: '0deg',
-        duration: 400,
-        ease: 'out(2)'
-      })
-      
-      animate(icon, {
-        scale: 1,
-        duration: 300,
-        ease: 'out(2)'
-      })
-    })
-  })
-  
-  // Did You Know icon hover animation
-  if (didYouKnowIcon.value) {
-    didYouKnowIcon.value.addEventListener('mouseenter', () => {
-      animate(didYouKnowIcon.value, {
-        scale: 1.15,
-        rotate: '10deg',
-        duration: 300,
-        ease: 'out(2)'
-      })
-    })
-    
-    didYouKnowIcon.value.addEventListener('mouseleave', () => {
-      animate(didYouKnowIcon.value, {
-        scale: 1,
-        rotate: '0deg',
-        duration: 400,
-        ease: 'spring(1, 80, 10, 0)'
-      })
-    })
-  }
-}
+const { startLogoFloating } = useLogoAnimations();
 
 onMounted(() => {
-  // Start logo floating animation
-   startLogoFloating()
-
-  // Hero Text Animation - Simple slide up and fade in
-  if (heroText.value) {
-    // Set initial state
-    animate(heroText.value, {
-      opacity: 0,
-      y: 40,
-      duration: 0
-    })
-    
-    // Animate on load (since hero is immediately visible)
-    setTimeout(() => {
-      animate(heroText.value, {
-        opacity: 1,
-        y: 0,
-        duration: 800,
-        ease: 'out(3)'
-      })
-    }, 500)
-  }
-
-  // Feature Cards Animation - Slide up with stagger
-  const animateCards = () => {
-    const cards = [card1.value, card2.value, card3.value].filter(Boolean)
-    
-    // Set initial state
-    animate(cards, {
-      opacity: 0,
-      y: 60,
-      scale: 0.9,
-      duration: 0
-    })
-    
-    // Animate in sequence
-    animate(cards, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 400,
-      ease: 'out(2)',
-      delay: stagger(100)
-    })
-    
-    // Setup hover animations after cards are visible
-    setTimeout(() => {
-      setupHoverAnimations()
-    }, 800)
-  }
+  // Start logo floating
+  startLogoFloating();
   
-  // Set up scroll observer for cards
-  if (card1.value) {
-    createScrollObserver(card1.value, animateCards)
-  }
-
-  // Banner Header Animation - Simple slide up
-  const animateBannerHeader = () => {
-    if (bannerHeader.value) {
-      // Set initial state
-      animate(bannerHeader.value, {
-        opacity: 0,
-        y: 40,
-        duration: 0
-      })
-      
-      // Animate
-      animate(bannerHeader.value, {
-        opacity: 1,
-        y: 0,
-        duration: 700,
-        ease: 'out(3)'
-      })
-    }
-  }
+  // Animate hero text immediately (always visible)
+  animateHeroText();
   
-  if (bannerHeader.value) {
-    createScrollObserver(bannerHeader.value, animateBannerHeader)
-  }
-
-  // Did You Know Icon Animation - Bounce in
-  const animateDidYouKnowIcon = () => {
-    if (didYouKnowIcon.value) {
-      // Set initial state
-      animate(didYouKnowIcon.value, {
-        opacity: 0,
-        scale: 0,
-        rotate: -180,
-        duration: 0
-      })
-      
-      // Animate
-      animate(didYouKnowIcon.value, {
-        opacity: 1,
-        scale: 1,
-        rotate: 0,
-        duration: 800,
-        ease: 'spring(1, 80, 10, 0)'
-      })
-    }
-  }
-  
-  if (didYouKnowIcon.value) {
-    createScrollObserver(didYouKnowIcon.value, animateDidYouKnowIcon)
-  }
-
-  // Footer Header Animation - Simple slide up
-  const animateFooterHeader = () => {
-    if (footerHeader.value) {
-      // Set initial state
-      animate(footerHeader.value, {
-        opacity: 0,
-        y: 30,
-        duration: 0
-      })
-      
-      // Animate
-      animate(footerHeader.value, {
-        opacity: 1,
-        y: 0,
-        duration: 600,
-        ease: 'out(2)'
-      })
-    }
-  }
-  
-  if (footerHeader.value) {
-    createScrollObserver(footerHeader.value, animateFooterHeader)
-  }
-})
+  // Initialize ALL scroll-triggered animations (handles everything else)
+  initializeScrollAnimations();
+});
 </script>
 
 <style scoped>
-/* All your existing styles remain the same... */
-/* HERO SECTION STYLES */
+/* HERO SECTION STYLES - Only custom variables */
 .hero-section {
-  min-height: 100vh !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  min-height: 100vh;
 }
 
 .hero-logo {
-  width: 16rem !important; 
-  height: 16rem !important;
+  width: 16rem;
+  height: 16rem;
 }
 
 .bg-hero-image {
@@ -441,230 +209,209 @@ onMounted(() => {
     rgba(10, 17, 35, 0.4) 0%,     
     rgba(10, 17, 35, 0.7) 60%,    
     rgba(10, 17, 35, 1) 100%      
-  ) !important;
+  );
 }
 
 .hero-text {
-  font-size: var(--font-size-base) !important;
-  color: var(--color-text-light) !important;
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  line-height: 1.6;
 }
 
 .cta-button {
-  background-color: var(--color-gold) !important;
-  color: var(--color-midnight) !important;
-  font-family: var(--font-sans) !important;
-  font-size: var(--font-size-base) !important;
+  background-color: var(--color-gold);
+  color: var(--color-midnight);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
 }
 
 .cta-button:hover {
-  background-color: var(--color-lavender) !important;
+  background-color: var(--color-lavender);
 }
 
 /* FEATURES SECTION STYLES */
 .features-section {
-  background-color: var(--color-background) !important; /* midnight background continues */
+  background-color: var(--color-background);
 }
 
 /* Feature Cards */
 .feature-card {
-  background-color: var(--color-lavender) !important;
-  transition: transform 0.3s ease !important;
-}
-
-.feature-card:hover {
-  transform: translateY(-8px) !important;
+  background-color: var(--color-lavender);
 }
 
 /* Icon Circles */
 .icon-circle {
-  background-color: var(--color-midnight) !important;
-  cursor: pointer !important;
-  transition: box-shadow 0.3s ease !important;
+  background-color: var(--color-midnight);
 }
 
 .icon-circle:hover {
-  box-shadow: 0 8px 25px rgba(131, 135, 195, 0.3) !important; /* lavender glow */
+  box-shadow: 0 8px 25px rgba(131, 135, 195, 0.3);
 }
 
 /* Card Typography */
 .card-header {
-  font-family: var(--font-serif) !important; /* Alice for headers */
-  font-size: var(--font-size-sm) !important;
-  color: var(--color-midnight) !important;
-  font-weight: 600 !important;
+  font-family: var(--font-serif);
+  font-size: var(--font-size-sm);
+  color: var(--color-midnight);
+  font-weight: 600;
 }
 
 .card-text {
-  font-family: var(--font-sans) !important; /* Anuphan for body text */
-  font-size: var(--font-size-xs) !important;
-  color: var(--color-midnight) !important;
-  line-height: 1.6 !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  color: var(--color-midnight);
+  line-height: 1.6;
 }
 
 /* BANNER SECTION STYLES */
 .banner-section {
-  background-color: var(--color-background) !important; /* midnight background continues */
-  overflow: hidden !important;
+  background-color: var(--color-background);
 }
 
 /* Banner Header */
 .banner-header {
-  font-family: var(--font-serif) !important; /* Alice for headers */
-  font-size: var(--font-size-xl) !important;
-  color: var(--color-text-light) !important; /* cream text */
-  font-weight: 600 !important;
+  font-family: var(--font-serif);
+  font-size: var(--font-size-xl);
+  color: var(--color-text-light);
+  font-weight: 600;
 }
 
 /* Facts Content with Gradient Background */
 .facts-content {
   background: linear-gradient(
     to right,
-    rgba(58, 62, 108, 0.35) 0%,    /* --color-deep-purple with 35% opacity */
-    rgba(58, 62, 108, 0.35) 50%,   /* --color-deep-purple with 35% opacity */
-    rgba(224, 197, 143, 0.35) 100% /* --color-gold with 35% opacity */
-  ) !important;
+    rgba(58, 62, 108, 0.35) 0%,
+    rgba(58, 62, 108, 0.35) 50%,
+    rgba(224, 197, 143, 0.35) 100%
+  );
 }
 
 /* Fact Typography */
 .fact-header {
-  font-family: var(--font-serif) !important; /* Alice for headers */
-  font-size: var(--font-size-lg) !important;
-  color: var(--color-text-light) !important; /* cream text */
-  font-weight: 600 !important;
+  font-family: var(--font-serif);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
+  font-weight: 600;
 }
 
 .fact-text {
-  font-family: var(--font-sans) !important; /* Anuphan for body text */
-  font-size: var(--font-size-sm) !important;
-  color: var(--color-text-light) !important; /* cream text */
-  line-height: 1.6 !important;
-}
-
-/* Scattered Background Icons - positioned relative to facts-content */
-.scattered-icon {
-  position: absolute !important;
-  width: 2rem !important;
-  height: 2rem !important;
-  opacity: 0.2 !important;
-  z-index: 1 !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  line-height: 1.6;
 }
 
 /* Icon Positions - Mobile (relative to facts-content div) */
-.moon-1 { top: 20% !important; left: 10% !important; }
-.cloud-1 { top: 50% !important; right: 15% !important; }
-.star-1 { top: 75% !important; left: 20% !important; }
+.moon-1 { top: 20%; left: 10%; }
+.cloud-1 { top: 50%; right: 15%; }
+.star-1 { top: 75%; left: 20%; }
 
 /* Did You Know Icon - positioned at bottom center of facts content */
 .did-you-know-icon {
-  position: absolute !important;
-  bottom: -17% !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 1.5rem !important;
-  height: 2rem !important;
-  z-index: 5 !important;
-  cursor: pointer !important;
-  transition: filter 0.3s ease !important;
+  bottom: -35%;
+  left: 43%;
+  transform: translateX(-50%);
+  width: 1.5rem;
+  height: 2rem;
 }
 
 .did-you-know-icon:hover {
-  filter: drop-shadow(0 4px 8px rgba(224, 197, 143, 0.4)) !important; /* gold glow */
+  filter: drop-shadow(0 4px 8px rgba(224, 197, 143, 0.4));
 }
 
 /* FOOTER SECTION STYLES */
 .footer-section {
-  background-color: var(--color-background) !important; /* midnight background continues */
+  background-color: var(--color-background);
 }
 
 /* Footer Header */
 .footer-header {
-  font-family: var(--font-serif) !important; /* Alice for headers */
-  font-size: var(--font-size-base) !important;
-  color: var(--color-text-light) !important; /* cream text */
-  font-weight: 600 !important;
+  font-family: var(--font-serif);
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  font-weight: 600;
 }
 
 /* Footer Text */
 .footer-text {
-  font-family: var(--font-sans) !important; /* Anuphan for body text */
-  font-size: var(--font-size-xs) !important;
-  color: var(--color-text-light) !important; /* cream text */
-  line-height: 1.6 !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  line-height: 1.6;
 }
 
 /* Responsive adjustments */
 @media (min-width: 768px) {
   .hero-section {
-    min-height: 130vh !important;
+    min-height: 130vh;
   }
   
   .hero-logo {
-    width: 16rem !important;
-    height: 16rem !important;
+    width: 16rem;
+    height: 16rem;
   }
   
   .hero-text {
-    font-size: var(--font-size-base) !important;
+    font-size: var(--font-size-base);
   }
   
   .cta-button {
-    font-size: var(--font-size-base) !important;
+    font-size: var(--font-size-base);
   }
   
   .card-header {
-    font-size: var(--font-size-base) !important;
+    font-size: var(--font-size-base);
   }
   
   .card-text {
-    font-size: var(--font-size-xs) !important;
+    font-size: var(--font-size-xs);
   }
   
   .banner-header {
-    font-size: var(--font-size-2xl) !important;
+    font-size: var(--font-size-2xl);
   }
   
   .fact-header {
-    font-size: var(--font-size-xl) !important;
+    font-size: var(--font-size-xl);
   }
   
   .fact-text {
-    font-size: var(--font-size-base) !important;
+    font-size: var(--font-size-base);
   }
   
   .footer-header {
-    font-size: var(--font-size-lg) !important;
+    font-size: var(--font-size-lg);
   }
   
   .footer-text {
-    font-size: var(--font-size-sm) !important;
+    font-size: var(--font-size-sm);
   }
   
-    /* Adjust icon positions for larger screens */
+  /* Adjust icon positions for larger screens */
   .scattered-icon {
-    width: 2.5rem !important;
-    height: 2.5rem !important;
+    width: 2.5rem;
+    height: 2.5rem;
   }
   
-  .star-1 { top: 15% !important; left: 8% !important; }
-  .cloud-1 { top: 20% !important; right: 5% !important; }
-  .moon-1 { top: 70% !important; left: 43% !important; }
+  .star-1 { top: 15%; left: 8%; }
+  .cloud-1 { top: 20%; right: 5%; }
+  .moon-1 { top: 70%; left: 43%; }
 
    /* Larger did-you-know icon on desktop */
   .did-you-know-icon {
-    width: 9rem !important;
-    height: 6rem !important;
+    width: 9rem;
+    height: 6rem;
   }
-  
 }
 
 @media (min-width: 1024px) {
   .hero-section {
-    min-height: 140vh !important;
+    min-height: 140vh;
   }
   
   .hero-logo {
-    width: 20rem !important;
-    height: 20rem !important;
+    width: 20rem;
+    height: 20rem;
   }
 }
 </style>
