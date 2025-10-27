@@ -1,5 +1,5 @@
 export function useLogoAnimations() {
-    // Logo continuous floating animation - Never stops
+    // Logo continuous floating animation - For Hero Section on home page
     const startLogoFloating = () => {
         console.log('🌙 Starting logo floating animation')
         
@@ -32,7 +32,35 @@ export function useLogoAnimations() {
         }, 1000)
     }
 
+
+    // Logo pulsing animation - For Dashboard 
+    const startLogoPulsing = (logoElement) => {
+        console.log('💓 Starting logo pulsing animation')
+        
+        if (!logoElement) {
+            console.warn('⚠️ No logo element provided for pulsing')
+            return
+        }
+        
+        let startTime = Date.now()
+        
+        const pulse = () => {
+            const elapsed = (Date.now() - startTime) / 1000
+            const scale = 1 + Math.sin(elapsed * 2) * 0.1 // Pulse between 0.9 and 1.1
+            
+            logoElement.style.transform = `scale(${scale})`
+            
+            requestAnimationFrame(pulse)
+        }
+        
+        setTimeout(() => {
+            console.log('✅ Logo pulsing animation started')
+            pulse()
+        }, 500)
+    }
+
     return {
-        startLogoFloating
+        startLogoFloating,
+        startLogoPulsing
     }
 }

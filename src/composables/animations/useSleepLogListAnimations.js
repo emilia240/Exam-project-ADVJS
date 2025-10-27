@@ -2,42 +2,16 @@ import { ref } from 'vue'
 import { animate, stagger } from 'animejs'
 import { useScrollAnimations } from './shared/useScrollAnimations'
 
-export function useDashboardAnimations() {
+export function useSleepLogListAnimations() {
     // Import shared scroll functionality
     const { createScrollObserver } = useScrollAnimations()
     
     // Template refs for animations
-    const welcomeTitle = ref(null)
-    const recentLogsCards = ref([])
+    const sleepLogCards = ref([])
 
-    // Welcome Title Animation - Same as HomeView hero text
-    const animateWelcomeTitle = () => {
-        console.log('🎬 Starting welcome title animation')
-        
-        if (welcomeTitle.value) {
-            // Set initial state
-            animate(welcomeTitle.value, {
-                opacity: 0,
-                y: 40,
-                duration: 0
-            })
-            
-            // Animate on load (since welcome is immediately visible)
-            setTimeout(() => {
-                animate(welcomeTitle.value, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 800,
-                    ease: 'out(3)'
-                })
-                console.log('✅ Welcome title animation completed')
-            }, 500)
-        }
-    }
-
-    // Recent Sleep Log Cards Animation - Same as HomeView feature cards
-    const animateRecentLogCards = () => {
-        console.log('🎬 Starting recent log cards stagger animation')
+    // All Sleep Log Cards Animation - Same pattern as HomeView feature cards
+    const animateAllLogCards = () => {
+        console.log('🎬 Starting all sleep log cards stagger animation')
         
         // Get all sleep log cards
         const cards = document.querySelectorAll('.sleep-log-card')
@@ -62,7 +36,7 @@ export function useDashboardAnimations() {
                 delay: stagger(100) // 100ms delay between each card
             })
             
-            console.log('✅ Recent log cards animation completed')
+            console.log('✅ All sleep log cards animation completed')
         }
     }
 
@@ -95,18 +69,15 @@ export function useDashboardAnimations() {
         console.log('✅ Card hover animations setup complete')
     }
 
-    // Initialize all scroll-triggered animations
-    const initializeDashboardAnimations = () => {
-        console.log('🔄 Initializing dashboard animations')
+    // Initialize all scroll-triggered animations for SleepLogListView
+    const initializeSleepLogListAnimations = () => {
+        console.log('🔄 Initializing sleep log list animations')
         
-        // Animate welcome title immediately (always visible)
-        animateWelcomeTitle()
-        
-        // Set up scroll observer for recent log cards section
-        const recentLogsSection = document.querySelector('.recent-logs-section')
-        if (recentLogsSection) {
-            createScrollObserver(recentLogsSection, () => {
-                animateRecentLogCards()
+        // Set up scroll observer for sleep logs section
+        const sleepLogsSection = document.querySelector('.sleep-logs-section')
+        if (sleepLogsSection) {
+            createScrollObserver(sleepLogsSection, () => {
+                animateAllLogCards()
                 // Setup hover animations after cards are animated
                 setTimeout(() => {
                     setupCardHoverAnimations()
@@ -114,18 +85,16 @@ export function useDashboardAnimations() {
             })
         }
         
-        console.log('✅ All dashboard animations initialized')
+        console.log('✅ All sleep log list animations initialized')
     }
 
     return {
         // Template refs
-        welcomeTitle,
-        recentLogsCards,
+        sleepLogCards,
         
         // Animation functions
-        animateWelcomeTitle,
-        animateRecentLogCards,
+        animateAllLogCards,
         setupCardHoverAnimations,
-        initializeDashboardAnimations
+        initializeSleepLogListAnimations
     }
 }

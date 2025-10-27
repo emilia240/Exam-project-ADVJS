@@ -131,7 +131,7 @@ defineExpose({
 .modal-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background-color: rgba(10, 17, 35, 0.8) !important; /* Semi-transparent midnight */
+  background-color: rgba(10, 17, 35, 0.8) !important;
   backdrop-filter: blur(5px) !important;
   z-index: 1000 !important;
   display: flex !important;
@@ -142,7 +142,7 @@ defineExpose({
 
 /* Form Container */
 .sleep-form-container {
-  background-color: #3A3E6C !important; /* Your specified color */
+  background-color: #3A3E6C !important;
   border-radius: 1rem !important;
   padding: 2rem !important;
   max-width: 600px !important;
@@ -153,7 +153,7 @@ defineExpose({
 
 /* Title */
 .form-title {
-  color: var(--color-cream) !important; /* F5F0E9 */
+  color: var(--color-cream) !important;
   font-family: var(--font-serif) !important;
   font-size: var(--font-size-xl) !important;
   text-align: center !important;
@@ -162,7 +162,7 @@ defineExpose({
 
 /* Section Headers */
 .section-header {
-  color: var(--color-cream) !important; /* F5F0E9 */
+  color: var(--color-cream) !important;
   font-family: var(--font-sans) !important;
   font-size: var(--font-size-base) !important;
   margin-bottom: 0.5rem !important;
@@ -176,8 +176,8 @@ defineExpose({
 }
 
 .time-input {
-  background-color: #0A1123 !important; /* Your specified color */
-  color: var(--color-cream) !important;
+  background-color: var(--color-cream) !important;
+  color: var(--color-midnight) !important;
   border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
   border-radius: 0.5rem !important;
   padding: 0.75rem !important;
@@ -192,13 +192,13 @@ defineExpose({
 }
 
 .sleep-total-display {
-  background-color: #0A1123 !important;
-  color: var(--color-lavender) !important;
+  background-color: var(--color-sand) !important;
+  color: var(--color-midnight) !important;
   border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
   border-radius: 0.5rem !important;
   padding: 0.75rem !important;
   font-family: var(--font-sans) !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   text-align: center !important;
   min-height: 2.75rem !important;
   display: flex !important;
@@ -237,7 +237,7 @@ defineExpose({
 .quality-slider {
   flex: 1 !important;
   height: 0.5rem !important;
-  background-color: #0A1123 !important;
+  background-color: var(--color-gold) !important;
   border-radius: 0.25rem !important;
 }
 
@@ -252,7 +252,7 @@ defineExpose({
 
 /* Dream Textarea */
 .textarea-container {
-  background-color: #0A1123 !important; /* Your specified color */
+  background-color: #0A1123 !important;
   border-radius: 0.5rem !important;
   padding: 0.25rem !important;
   margin-bottom: 1.5rem !important;
@@ -270,7 +270,7 @@ defineExpose({
 }
 
 .dream-textarea::placeholder {
-  color: var(--color-cream) !important; /* F5F0E9 as specified */
+  color: var(--color-cream) !important;
 }
 
 .dream-textarea:focus {
@@ -305,7 +305,7 @@ defineExpose({
 /* Action Buttons */
 .button-section {
   display: flex !important;
-  gap: 1rem !important;
+  gap: 3rem !important;
   justify-content: center !important;
 }
 
@@ -321,22 +321,22 @@ defineExpose({
 }
 
 .save-button {
-  background-color: var(--color-gold) !important;
+  background-color: var(--color-lavender) !important;
   color: var(--color-midnight) !important;
 }
 
 .save-button:hover {
-  background-color: var(--color-lavender) !important;
+  background-color: var(--color-gold) !important;
   transform: translateY(-2px) !important;
 }
 
 .cancel-button {
-  background-color: color-mix(in srgb, #dc2663 80%, transparent) !important;
-  color: var(--color-text-light) !important;
+  background-color: var(--color-sand) !important;
+  color: var(--color-text-dark) !important;
 }
 
 .cancel-button:hover {
-  background-color: #dc2663 !important;
+  background-color: #ff6b6b !important;
   transform: translateY(-2px) !important;
 }
 </style>

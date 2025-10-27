@@ -18,7 +18,7 @@ const showNavigation = computed(() => {
       <div class="nav-links">
         <RouterLink to="/dashboard" class="nav-link">Dashboard</RouterLink>
 
-        <AuthButton :showIcon="false" /> <!-- prop to control icon visibility -->
+        <AuthButton :showIcon="false"  style="border: none !important;"/> <!-- prop to control icon visibility -->
       </div>
     </nav>
 

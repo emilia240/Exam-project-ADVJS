@@ -52,7 +52,7 @@ const props = defineProps({
   }
 })
 
-defineEmits(['viewAll', 'newLog'])
+defineEmits(['newLog'])
 </script>
 
 <style scoped>
