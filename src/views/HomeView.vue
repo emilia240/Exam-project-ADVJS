@@ -1,18 +1,18 @@
 <template>
   <main class="min-h-screen">
     <!-- Hero Section with Background Image & Gradient -->
-    <section class="hero-section relative !w-screen overflow-hidden flex justify-center items-center">
+    <section class="hero-section relative overflow-hidden flex justify-center items-center">
       <!-- Background Image with Gradient Overlay -->
       <div class="absolute inset-0 bg-hero-image bg-cover bg-center bg-no-repeat"></div>
       <div class="absolute inset-0 bg-hero-gradient"></div>
       
       <!-- Hero Content -->
-      <div class="hero-content relative !z-10 text-center !px-4 !max-w-4xl !mx-auto">
+      <div class="hero-content relative flex flex-col z-10 text-center items-center justify-start !px-4 !max-w-4xl !mx-auto">
         <!-- Logo -->
         <img 
           src="@/assets/img/Logo-somnus.svg" 
           alt="Somnus Logo" 
-          class="hero-logo block !mx-auto !mb-24 !md:mb-32 !lg:mb-40"
+          class="hero-logo flex !mx-auto !mb-24 !md:mb-32 !lg:mb-40"
         >
         
         <!-- Hero Text -->

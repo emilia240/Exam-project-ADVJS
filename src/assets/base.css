@@ -19,7 +19,6 @@
   --color-text-purple: var(--color-lavender);
   --color-text-cream: var(--color-sand);
   --color-text-btn: var(--color-gold);
-  --color-border: var(--color-lavender);
 
   /* Typography Scale using font-clamp */
   --font-size-xs: clamp(0.75rem, 2vw, 0.875rem);
@@ -98,7 +97,7 @@ button {
 }
 
 /* INPUT BASE STYLES */
-input {
+/* input {
   font-family: inherit;
   border-radius: 0.5rem;
   border: 1px solid var(--color-border);
@@ -108,4 +107,4 @@ input {
 input:focus {
   outline: none;
   border-color: var(--color-accent);
-}
+} */

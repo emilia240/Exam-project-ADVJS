@@ -14,7 +14,7 @@
           </div>
           
           <!-- Logo with Animation -->
-          <div class="flex flex-col !items-center !p-4">
+          <div class="flex flex-col !gap-4 !items-center !p-4">
             <img 
               ref="dashboardLogo"
               src="@/assets/img/Logo-somnus.svg" 

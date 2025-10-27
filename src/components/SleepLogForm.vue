@@ -32,15 +32,16 @@
           <h3 class="section-header">Sleep Quality (1-10)</h3>
           <div class="slider-container">
             <input 
+              id="quality-range" 
               type="range" 
               min="1" 
               max="10" 
-              v-model="sleepQuality" 
-              class="quality-slider"
+              v-model="sleepQuality"
+              class="custom-range-slider"
             >
             <div class="quality-display">
               <span class="quality-number">{{ sleepQuality }}</span>
-              <span class="quality-star">⭐</span>
+              <img ref="starIcon" src="@/assets/img/star.svg" alt="star" class="star-icon">
             </div>
           </div>
         </div>
@@ -86,6 +87,8 @@
 </template>
 
 <script setup>
+import { onMounted, ref, watch } from 'vue'
+import { animate } from 'animejs'
 import { useSleepLogs } from '@/modules/useSleepLogs'
 
 const { 
@@ -117,6 +120,46 @@ const {
 } = useSleepLogs()
 
 
+// Template refs
+const starIcon = ref(null)
+let starAnimation = null
+
+// Simple pulse function
+const startStarPulse = () => {
+  if (!starIcon.value) return
+  
+  starAnimation = animate(starIcon.value, {
+    scale: [1, 1.25, 1],
+    duration: 2000,
+    easing: 'easeInOutSine',
+    loop: true
+  })
+  
+  console.log('⭐ Star pulse started')
+}
+
+const stopStarPulse = () => {
+  if (starAnimation) {
+    starAnimation.pause()
+    starAnimation = null
+  }
+}
+
+// Start/stop animation when form opens/closes
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    setTimeout(startStarPulse, 300)
+  } else {
+    stopStarPulse()
+  }
+})
+
+onMounted(() => {
+  if (isOpen.value) {
+    startStarPulse()
+  }
+})
+
 
 // Expose methods for parent components
 defineExpose({
@@ -127,7 +170,9 @@ defineExpose({
 </script>
 
 <style scoped>
+
 /* Modal Overlay */
+
 .modal-overlay {
   position: fixed !important;
   inset: 0 !important;
@@ -155,7 +200,7 @@ defineExpose({
 .form-title {
   color: var(--color-cream) !important;
   font-family: var(--font-serif) !important;
-  font-size: var(--font-size-xl) !important;
+  font-size: var(--font-size-2xl) !important;
   text-align: center !important;
   margin-bottom: 2rem !important;
 }
@@ -226,6 +271,10 @@ defineExpose({
   border-radius: 0.5rem !important;
 }
 
+
+
+
+
 /* Quality Slider */
 .slider-container {
   display: flex !important;
@@ -234,21 +283,71 @@ defineExpose({
   margin-bottom: 1.5rem !important;
 }
 
-.quality-slider {
+/* Custom Range Slider - Replaces the old quality-slider */
+.custom-range-slider {
   flex: 1 !important;
-  height: 0.5rem !important;
-  background-color: var(--color-gold) !important;
-  border-radius: 0.25rem !important;
+  height: 0.6rem !important;
+  border-radius: 1rem !important;
+  background: var(--color-midnight) !important; /* Track color - midnight blue */
+  outline: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
+
+/* Webkit browsers (Chrome, Safari, Edge) - Track */
+.custom-range-slider::-webkit-slider-track {
+  height: 8px !important;
+  border-radius: 5px !important;
+  background: var(--color-gold) !important;
+  border: none !important;
+}
+
+/* Webkit browsers - Thumb (handle) */
+.custom-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  height: 1.6rem !important;
+  width: 1.6rem !important;
+  border-radius: 50% !important;
+  background: var(--color-lavender) !important; 
+  cursor: pointer !important;
+  border: 2px solid var(--color-cream) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Webkit browsers - Thumb hover */
+.custom-range-slider::-webkit-slider-thumb:hover {
+  background: var(--color-gold) !important;
+  transform: scale(1.15) !important;
+  box-shadow: 0 4px 12px rgba(131, 135, 195, 0.4) !important;
+}
+
+/* Webkit browsers - Thumb active */
+.custom-range-slider::-webkit-slider-thumb:active {
+  transform: scale(1.15) !important;
+}
+
 
 .quality-display {
   display: flex !important;
   align-items: center !important;
-  gap: 0.5rem !important;
-  color: var(--color-cream) !important;
+  gap: 0.8rem !important;
+  color: var(--color-gold) !important;
   font-family: var(--font-sans) !important;
-  font-size: var(--font-size-lg) !important;
+  font-size: var(--font-size-xl) !important;
 }
+
+.star-icon {
+  width: 1.7rem !important;
+  height: 1.7rem !important;
+}
+
+
+
+
 
 /* Dream Textarea */
 .textarea-container {
