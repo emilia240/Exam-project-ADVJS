@@ -56,9 +56,9 @@
             </div>
 
             <!-- View Details Button -->
-            <button class="view-details-button flex justify-center !w-full !py-2 !px-4 !rounded-lg !font-medium !transition-all !duration-300 hover:-translate-y-0.5">
+            <router-link :to="`/sleep-logs/${log.id}`" class="view-details-button flex justify-center !w-full !py-2 !px-4 !rounded-lg !font-medium !transition-all !duration-300 hover:-translate-y-0.5">
               View Details
-            </button>
+            </router-link>
           </div>
 
           <!-- Empty State -->
@@ -78,6 +78,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useAuth } from '../modules/useAuth.js'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
 import { useSleepLogListAnimations } from '../composables/animations/useSleepLogListAnimations.js'

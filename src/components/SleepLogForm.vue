@@ -337,7 +337,7 @@ defineExpose({
   gap: 0.8rem !important;
   color: var(--color-gold) !important;
   font-family: var(--font-sans) !important;
-  font-size: var(--font-size-xl) !important;
+  font-size: var(--font-size-3xl) !important;
 }
 
 .star-icon {

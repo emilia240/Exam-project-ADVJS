@@ -34,28 +34,32 @@ export function useSleepLogs() {
     const editingId = ref(null) // Track which log is being edited
     const editTitle = ref('') // Hold the edited title
 
-    
 
-    // Computed - Total Sleep Time (function to calculate total sleep time based on bedTime and wakeTime)
-    const totalSleepTime = computed(() => {
-        console.log('⏰ Computing totalSleepTime - bedTime:', bedTime.value, 'wakeTime:', wakeTime.value)
-        if (bedTime.value && wakeTime.value) {
-        const bed = new Date(`2024-01-01 ${bedTime.value}`)
-        const wake = new Date(`2024-01-01 ${wakeTime.value}`)
+    // Helper function to calculate sleep hours
+    const calculateSleepHours = (bedTime, wakeTime) => {
+        if (!bedTime || !wakeTime) return null
+        
+        console.log('🛏️ Calculating sleep hours from', bedTime, 'to', wakeTime)
+        const bed = new Date(`2024-01-01 ${bedTime}`)
+        const wake = new Date(`2024-01-01 ${wakeTime}`)
         
         // Handle overnight sleep
         if (wake < bed) {
             wake.setDate(wake.getDate() + 1)
-            console.log('🌙 Detected overnight sleep, adjusted wake time')
         }
         
         const diffMs = wake - bed
-        const hours = (diffMs / (1000 * 60 * 60)).toFixed(1)
-        console.log('⏰ Calculated sleep hours:', hours)
-        return `${hours} hours`
-        }
-        console.log('⏰ No bedTime or wakeTime provided, returning default')
-        return '- hours'
+        const hours = (diffMs / (1000 * 60 * 60)) // Return as number, not string
+        console.log('✅ Calculated sleep hours:', hours)
+        return hours
+    }
+
+
+    // Computed - Total Sleep Time (function to calculate total sleep time based on bedTime and wakeTime)
+    const totalSleepTime = computed(() => {
+        const hours = calculateSleepHours(bedTime.value, wakeTime.value)
+        console.log('🕒 totalSleepTime computed:', hours)
+        return hours ? `${hours.toFixed(1)} hours` : '- hours'
     })
 
     // Reset error function
@@ -173,12 +177,9 @@ export function useSleepLogs() {
         saving.value = true
         
         try {
-            // Calculate hours as number for Firestore
-            const bed = new Date(`2024-01-01 ${bedTime.value}`)
-            const wake = new Date(`2024-01-01 ${wakeTime.value}`)
-            if (wake < bed) wake.setDate(wake.getDate() + 1)
-            const hoursSlept = (wake - bed) / (1000 * 60 * 60)
-            
+            console.log('💾 Preparing sleep log data for Firestore...')
+            const hoursSlept = calculateSleepHours(bedTime.value, wakeTime.value)
+
             // Prepare data matching your Firestore schema
             const sleepLogData = {
                 bedTime: bedTime.value,
@@ -368,6 +369,9 @@ export function useSleepLogs() {
     errorMessage,
     resetError,
     
+    //Calculation helper
+    calculateSleepHours,
+
     // Form actions
     openForm,
     closeForm,
