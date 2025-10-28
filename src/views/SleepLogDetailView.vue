@@ -163,6 +163,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '../modules/firebase.js'
+import { animate, stagger } from 'animejs'
+
 
 import DashboardNav from '../components/DashboardNav.vue'
 import SleepLogForm from '../components/SleepLogForm.vue'
@@ -326,6 +328,37 @@ const formatTimestamp = (timestamp) => {
   })
 }
 
+
+const animateDetailCards = () => {
+  console.log('🎬 Starting detail cards stagger animation')
+  
+  const cards = document.querySelectorAll('.details-header-card, .sleep-data-card')
+  const cardArray = Array.from(cards)
+  
+  if (cardArray.length > 0) {
+    // Set initial state
+    animate(cardArray, {
+      opacity: 0,
+      y: 60,
+      scale: 0.9,
+      duration: 0
+    })
+    
+    // Animate in sequence with stagger
+    animate(cardArray, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 400,
+      ease: 'out(2)',
+      delay: stagger(150) // 150ms delay between cards
+    })
+    
+    console.log('✅ Detail cards animation completed')
+  }
+}
+
+
 // Watch for log changes and reload data
 watch(currentLog, (newLog) => {
   if (newLog) {
@@ -338,6 +371,11 @@ onMounted(() => {
   if (currentLog.value) {
     loadCurrentLogData()
   }
+  
+  // Animate cards after a short delay
+  setTimeout(() => {
+    animateDetailCards()
+  }, 200)
 })
 
 // Warn user about unsaved changes before leaving

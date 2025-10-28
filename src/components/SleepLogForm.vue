@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div v-if="isOpen" class="modal-overlay fixed inset-0 z-[1000] flex items-center justify-center !p-8 backdrop-blur-sm" @click="handleOverlayClick">
-      <div class="sleep-form-container !w-full !max-w-2xl !max-h-[90vh] overflow-y-auto rounded-2xl !p-8" @click.stop>
+      <div ref="formContainer" class="sleep-form-container !w-full !max-w-4xl !max-h-[100vh] overflow-y-auto rounded-2xl !p-8" @click.stop>
         
         <!-- Title -->
         <h2 class="form-title text-center !mb-8">Log Your Sleep</h2>
@@ -29,7 +29,7 @@
         </div>
         
         <!-- Sleep Quality Section -->
-        <div class="quality-section !mb-6">
+        <div class="quality-section !my-4 flex flex-col justify-center">
           <h3 class="section-header !mb-2">Sleep Quality (1-10)</h3>
           <div class="slider-container flex items-center !gap-4 !mb-6">
             <input 
@@ -38,10 +38,10 @@
               min="1" 
               max="10" 
               v-model="sleepQuality"
-              class="custom-range-slider flex-1 !h-2 rounded-2xl outline-none cursor-pointer transition-all duration-200"
+              class="custom-range-slider flex !w-80 !h-2 rounded-2xl outline-none cursor-pointer transition-all duration-200"
             >
             <div class="quality-display flex items-center !gap-3">
-              <span class="quality-number">{{ sleepQuality }}</span>
+              <span ref="qualityNumber" class="quality-number">{{ sleepQuality }}</span>
               <img ref="starIcon" src="@/assets/img/star.svg" alt="star" class="star-icon !w-7 !h-7">
             </div>
           </div>
@@ -124,6 +124,22 @@ const {
 // Template refs
 const starIcon = ref(null)
 let starAnimation = null
+const formContainer = ref(null)
+const qualityNumber = ref(null)
+
+
+// Animate form entrance when it opens
+const animateFormEntrance = () => {
+  if (!formContainer.value) return
+  
+  animate(formContainer.value, {
+    scale: [0.8, 1],
+    opacity: [0, 1],
+    duration: 400,
+    easing: 'easeOutBack'
+  })
+}
+
 
 // Simple pulse function
 const startStarPulse = () => {
@@ -146,10 +162,23 @@ const stopStarPulse = () => {
   }
 }
 
+watch(sleepQuality, () => {
+  if (!qualityNumber.value) return
+  
+  animate(qualityNumber.value, {
+    scale: [1, 1.3, 1],
+    duration: 300,
+    easing: 'easeOutBack'
+  })
+})
+
 // Start/stop animation when form opens/closes
 watch(isOpen, (newValue) => {
   if (newValue) {
-    setTimeout(startStarPulse, 300)
+    setTimeout(() => {
+      animateFormEntrance()
+      startStarPulse()
+    }, 100)
   } else {
     stopStarPulse()
   }
