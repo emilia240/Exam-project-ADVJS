@@ -254,8 +254,8 @@ onMounted(() => {
 }
 
 .log-date {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-sm);
+  font-family: var(--font-serif);
+  font-size: var(--font-size-base);
   color: var(--color-cream);
   font-weight: 500;
 }

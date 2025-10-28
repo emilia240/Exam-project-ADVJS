@@ -2,24 +2,31 @@
   <div class="!min-h-screen" style="background-color: var(--color-background);">
     <DashboardNav navType="logs" @newLog="openSleepForm" />
     <SleepLogForm ref="sleepFormRef" />
-    
+
     <div class="content !pt-20 !md:pt-24 !px-4 !md:px-6 !max-w-4xl !mx-auto">
-      
+
       <!-- Navigation and Actions Header -->
-      <div class="header-actions !flex !items-center !justify-between !my-8">
+      <div class="header-actions flex items-center justify-between flex-col md:flex-row !my-8 !gap-4 md:!gap-0">
         <!-- Back to Logs -->
-        <router-link to="/sleep-logs" class="back-link !flex !items-center !gap-2 !no-underline !transition-colors !duration-300">
+        <router-link to="/sleep-logs" class="back-link flex items-center !gap-2 no-underline transition-colors duration-300">
           ← Back to logs
         </router-link>
         
         <!-- Action Buttons -->
-        <div class="action-buttons !flex !items-center !gap-3">
-          <button @click="saveSleepLogChanges" :disabled="saving" class="save-button !flex !items-center !gap-2 !px-4 !py-2 !rounded-lg !transition-all !duration-300">
+        <div class="action-buttons flex items-center !gap-3">
+          <button 
+            @click="saveSleepLogChanges" 
+            :disabled="saving" 
+            class="save-button flex items-center !gap-2 !px-4 !py-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5 border-none cursor-pointer font-semibold"
+          >
             <img src="@/assets/img/check.svg" alt="" class="!w-4 !h-4">
             <span>{{ saving ? 'Saving...' : 'Save' }}</span>
           </button>
           
-          <button @click="confirmDelete" class="delete-button !flex !items-center !gap-2 !px-4 !py-2 !rounded-lg !transition-all !duration-300">
+          <button 
+            @click="confirmDelete" 
+            class="delete-button flex items-center !gap-2 !px-4 !py-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5 border-none cursor-pointer font-semibold"
+          >
             <img src="@/assets/img/delete.svg" alt="" class="!w-4 !h-4">
             <span>Delete</span>
           </button>
@@ -27,27 +34,27 @@
       </div>
 
       <!-- Error Display -->
-      <div v-if="showError" class="error-message !mb-6 !p-4 !rounded-lg">
+      <div v-if="showError" class="error-message !mb-6 !p-4 rounded-lg text-center">
         {{ errorMessage }}
       </div>
 
       <!-- Sleep Log Details Header -->
-      <div class="details-header-card !p-6 !rounded-xl !mb-6">
-        <div class="!flex !items-start !justify-between">
+      <div class="details-header-card !p-10 rounded-xl !mb-6 border">
+        <div class="flex items-start justify-between">
           <!-- Left Side: Title and Timestamps -->
           <div class="header-info">
-            <div class="!flex !items-center !gap-3 !mb-4">
+            <div class="flex items-center !gap-3 !mb-4">
               <img src="@/assets/img/moon.svg" alt="" class="!w-6 !h-6">
-              <h2 class="details-title">Sleep Log Details</h2>
+              <h2 class="details-title font-medium">Sleep Log Details</h2>
             </div>
             
             <!-- Timestamps -->
             <div class="timestamps">
-              <p class="timestamp">
+              <p class="timestamp !mb-2">
                 <span class="timestamp-label">Created:</span> 
                 {{ formatTimestamp(currentLog?.createdAt) }}
               </p>
-              <p v-if="hasBeenUpdated" class="timestamp">
+              <p v-if="hasBeenUpdated" class="timestamp !mb-2">
                 <span class="timestamp-label">Updated:</span> 
                 {{ formatTimestamp(currentLog?.updatedAt) }}
               </p>
@@ -55,7 +62,7 @@
           </div>
           
           <!-- Right Side: Quality Rating -->
-          <div class="quality-rating !flex !items-center !gap-2">
+          <div class="quality-rating flex items-center !gap-2">
             <span class="quality-score">{{ currentLog?.sleepQuality || 0 }}/10</span>
             <img src="@/assets/img/star.svg" alt="" class="!w-5 !h-5">
           </div>
@@ -63,31 +70,31 @@
       </div>
 
       <!-- Editable Sleep Data -->
-      <div class="sleep-data-card !p-6 !rounded-xl">
+      <div class="sleep-data-card !p-10 rounded-xl border">
         <!-- Time Inputs Section -->
-        <div class="time-section !mb-8">
-          <div class="bedtime-group">
-            <h3 class="section-header">Bedtime</h3>
+        <div class="time-section grid grid-cols-1 md:grid-cols-3 !gap-4 !mb-8">
+          <div class="bedtime-group flex flex-col">
+            <h3 class="section-header !mb-2">Bedtime</h3>
             <input 
               type="time" 
               v-model="editBedTime" 
-              class="time-input"
+              class="time-input rounded-lg !p-3 border"
               @input="markAsChanged"
             >
           </div>
-          <div class="waketime-group">
-            <h3 class="section-header">Waketime</h3>
+          <div class="waketime-group flex flex-col">
+            <h3 class="section-header !mb-2">Waketime</h3>
             <input 
               type="time" 
               v-model="editWakeTime" 
-              class="time-input"
+              class="time-input rounded-lg !p-3 border"
               @input="markAsChanged"
             >
           </div>
           <!-- Total Sleep Time Display -->
-          <div class="sleep-total-group">
-            <h3 class="section-header">Total Sleep Time</h3>
-            <div class="sleep-total-display">
+          <div class="sleep-total-group flex flex-col">
+            <h3 class="section-header !mb-2">Total Sleep Time</h3>
+            <div class="sleep-total-display rounded-lg !p-3 border font-semibold text-center min-h-11 flex items-center justify-center">
               {{ calculatedSleepTime }} hours
             </div>
           </div>
@@ -95,31 +102,31 @@
 
         <!-- Sleep Quality Section -->
         <div class="quality-section !mb-8">
-          <h3 class="section-header">Sleep Quality (1-10)</h3>
-          <div class="slider-container">
+          <h3 class="section-header !mb-2">Sleep Quality (1-10)</h3>
+          <div class="slider-container flex items-center !gap-4 !mb-6">
             <input 
               type="range" 
               min="1" 
               max="10" 
               v-model="editSleepQuality"
-              class="custom-range-slider"
+              class="custom-range-slider flex-1 cursor-pointer outline-none transition-all duration-200"
               @input="markAsChanged"
             >
-            <div class="quality-display">
+            <div class="quality-display flex items-center !gap-3">
               <span class="quality-number">{{ editSleepQuality }}</span>
-              <img src="@/assets/img/star.svg" alt="star" class="quality-star-icon">
+              <img src="@/assets/img/star.svg" alt="star" class="quality-star-icon !w-7 !h-7">
             </div>
           </div>
         </div>
         
         <!-- Dream Journal Section -->
         <div class="dream-section !mb-8">
-          <h3 class="section-header">Dream Entry</h3>
-          <div class="textarea-container">
+          <h3 class="section-header !mb-2">Dream Entry</h3>
+          <div class="textarea-container rounded-lg !p-1 !mb-6">
             <textarea 
               v-model="editDreamJournal" 
               placeholder="Describe your dreams..."
-              class="dream-textarea"
+              class="dream-textarea !w-full !min-h-32 bg-transparent border-none !p-3 resize-y focus:outline-none"
               @input="markAsChanged"
             ></textarea>
           </div>
@@ -127,13 +134,13 @@
         
         <!-- Tags Section -->
         <div class="tags-section">
-          <h3 class="section-header">Tags</h3>
-          <div class="tags-container">
+          <h3 class="section-header !mb-2">Tags</h3>
+          <div class="tags-container rounded-lg !p-1">
             <input 
               type="text" 
               v-model="editTags" 
               placeholder="e.g., vivid, nightmare, lucid"
-              class="tags-input"
+              class="tags-input !w-full bg-transparent border-none !p-3 focus:outline-none"
               @input="markAsChanged"
             >
           </div>
@@ -141,7 +148,7 @@
       </div>
 
       <!-- Unsaved Changes Warning -->
-      <div v-if="hasUnsavedChanges" class="unsaved-warning !mt-4 !p-4 !rounded-lg">
+      <div v-if="hasUnsavedChanges" class="unsaved-warning !mt-4 !p-4 rounded-lg text-center border">
         <p>⚠️ You have unsaved changes. Don't forget to click Save!</p>
       </div>
 
@@ -150,6 +157,7 @@
 </template>
 
 <script setup>
+// Keep your existing script exactly the same
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
@@ -205,7 +213,6 @@ const hasBeenUpdated = computed(() => {
   const updated = new Date(currentLog.value.updatedAt?.toDate?.() || currentLog.value.updatedAt)
   return updated.getTime() - created.getTime() > 1000 // More than 1 second difference
 })
-
 
 // Methods
 const openSleepForm = () => {
@@ -343,6 +350,8 @@ window.addEventListener('beforeunload', (e) => {
 </script>
 
 <style scoped>
+/* ✅ ONLY CSS VARIABLES AND BROWSER-SPECIFIC PROPERTIES REMAIN */
+
 /* Back Link */
 .back-link {
   color: var(--color-text-light);
@@ -359,13 +368,10 @@ window.addEventListener('beforeunload', (e) => {
   background-color: var(--color-gold);
   color: var(--color-midnight);
   font-family: var(--font-sans);
-  font-weight: 600;
-  border: none;
 }
 
 .save-button:hover:not(:disabled) {
   background-color: var(--color-lavender);
-  transform: translateY(-2px);
 }
 
 .save-button:disabled {
@@ -378,29 +384,25 @@ window.addEventListener('beforeunload', (e) => {
   background-color: var(--color-sand);
   color: var(--color-midnight);
   font-family: var(--font-sans);
-  font-weight: 600;
-  border: none;
 }
 
 .delete-button:hover {
   background-color: #ff6b6b;
   color: white;
-  transform: translateY(-2px);
 }
 
 /* Cards */
 .details-header-card,
 .sleep-data-card {
   background-color: var(--color-deep-purple);
-  border: 1px solid color-mix(in srgb, var(--color-lavender) 20%, transparent);
+  border-color: color-mix(in srgb, var(--color-lavender) 20%, transparent);
 }
 
 /* Details Title */
 .details-title {
   font-family: var(--font-serif);
-  font-size: var(--font-size-xl);
   color: var(--color-cream);
-  font-weight: 600;
+  font-size: var(--font-size-xl);
 }
 
 /* Timestamps */
@@ -408,80 +410,50 @@ window.addEventListener('beforeunload', (e) => {
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   color: var(--color-text-light);
-  margin-bottom: 0.5rem;
 }
 
 .timestamp-label {
-  font-weight: 600;
-  color: var(--color-lavender);
+  color: var(--color-sand);
+  font-weight: 500 !important;
 }
 
 /* Quality Rating */
 .quality-score {
   font-family: var(--font-sans);
-  font-size: var(--font-size-2xl);
   color: var(--color-gold);
-  font-weight: 700;
+  font-weight: 600 !important;
+  font-size: var(--font-size-2xl);
 }
 
 /* Section Headers */
 .section-header {
   color: var(--color-cream);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: var(--font-size-base);
-  margin-bottom: 0.5rem;
 }
 
-/* Use same styling as SleepLogForm */
-.time-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
+/* Time Inputs */
 .time-input {
   background-color: var(--color-cream);
   color: var(--color-midnight);
-  border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
+  border-color: color-mix(in srgb, var(--color-lavender) 30%, transparent);
   font-family: var(--font-sans);
 }
 
 .sleep-total-display {
   background-color: var(--color-sand);
   color: var(--color-midnight);
-  border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
+  border-color: color-mix(in srgb, var(--color-lavender) 30%, transparent);
   font-family: var(--font-sans);
-  font-weight: 600;
-  text-align: center;
-  min-height: 2.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* Quality Slider - Same as SleepLogForm */
-.slider-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
+/* Quality Slider - Browser-specific properties that can't be done with Tailwind */
 .custom-range-slider {
-  flex: 1;
   height: 0.6rem;
   border-radius: 1rem;
   background: var(--color-midnight);
-  outline: none;
   -webkit-appearance: none;
   appearance: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .custom-range-slider::-webkit-slider-track {
@@ -510,59 +482,32 @@ window.addEventListener('beforeunload', (e) => {
 }
 
 .quality-display {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
   color: var(--color-gold);
   font-family: var(--font-sans);
-  font-size: var(--font-size-xl);
-}
-
-.quality-star-icon {
-  width: 1.7rem;
-  height: 1.7rem;
+  font-size: var(--font-size-3xl);
 }
 
 /* Dream Textarea */
 .textarea-container {
   background-color: #0A1123;
-  border-radius: 0.5rem;
-  padding: 0.25rem;
-  margin-bottom: 1.5rem;
 }
 
 .dream-textarea {
-  width: 100%;
-  min-height: 120px;
-  background: transparent;
   color: var(--color-cream);
-  border: none;
-  padding: 0.75rem;
   font-family: var(--font-sans);
-  resize: vertical;
 }
 
 .dream-textarea::placeholder {
   color: var(--color-cream);
 }
 
-.dream-textarea:focus {
-  outline: none;
-}
-
 /* Tags Input */
 .tags-container {
   background-color: #0A1123;
-  border-radius: 0.5rem;
-  padding: 0.25rem;
 }
 
 .tags-input {
-  width: 100%;
-  background: transparent;
   color: var(--color-cream);
-  border: none;
-  padding: 0.75rem;
   font-family: var(--font-sans);
 }
 
@@ -570,45 +515,21 @@ window.addEventListener('beforeunload', (e) => {
   color: var(--color-cream);
 }
 
-.tags-input:focus {
-  outline: none;
-}
-
 /* Error Message */
 .error-message {
   background-color: color-mix(in srgb, #dc2663 15%, transparent);
-  border: 1px solid color-mix(in srgb, #dc2663 40%, transparent);
+  border-color: color-mix(in srgb, #dc2663 40%, transparent);
   color: #ff6b6b;
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
-  text-align: center;
 }
 
 /* Unsaved Warning */
 .unsaved-warning {
   background-color: color-mix(in srgb, var(--color-gold) 15%, transparent);
-  border: 1px solid var(--color-gold);
+  border-color: var(--color-gold);
   color: var(--color-gold);
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
-  text-align: center;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .header-actions {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-  
-  .action-buttons {
-    justify-content: center;
-  }
-  
-  .time-section {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
 }
 </style>

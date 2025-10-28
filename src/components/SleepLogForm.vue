@@ -1,84 +1,85 @@
 <template>
   <Teleport to="body">
-    <div v-if="isOpen" class="modal-overlay" @click="handleOverlayClick">
-      <div class="sleep-form-container" @click.stop>
+    <div v-if="isOpen" class="modal-overlay fixed inset-0 z-[1000] flex items-center justify-center !p-8 backdrop-blur-sm" @click="handleOverlayClick">
+      <div class="sleep-form-container !w-full !max-w-2xl !max-h-[90vh] overflow-y-auto rounded-2xl !p-8" @click.stop>
+        
         <!-- Title -->
-        <h2 class="form-title">Log Your Sleep</h2>
+        <h2 class="form-title text-center !mb-8">Log Your Sleep</h2>
         
         <!-- Error Display -->
-        <span v-if="showError" class="error-message">{{ errorMessage }}</span>
+        <span v-if="showError" class="error-message block text-center !p-3 !mb-4 rounded-lg">{{ errorMessage }}</span>
         
         <!-- Time Inputs Section -->
-        <div class="time-section">
-          <div class="bedtime-group">
-            <h3 class="section-header">Bedtime</h3>
-            <input type="time" v-model="bedTime" class="time-input">
+        <div class="time-section grid grid-cols-1 md:grid-cols-3 !gap-4 !mb-6">
+          <div class="bedtime-group flex flex-col">
+            <h3 class="section-header !mb-2">Bedtime</h3>
+            <input type="time" v-model="bedTime" class="time-input rounded-lg !p-3 border">
           </div>
-          <div class="waketime-group">
-            <h3 class="section-header">Waketime</h3>
-            <input type="time" v-model="wakeTime" class="time-input">
+          <div class="waketime-group flex flex-col">
+            <h3 class="section-header !mb-2">Waketime</h3>
+            <input type="time" v-model="wakeTime" class="time-input rounded-lg !p-3 border">
           </div>
           <!-- Total Sleep Time Display -->
-          <div class="sleep-total-group">
-            <h3 class="section-header">Total Sleep Time</h3>
-            <div class="sleep-total-display">
+          <div class="sleep-total-group flex flex-col">
+            <h3 class="section-header !mb-2">Total Sleep Time</h3>
+            <div class="sleep-total-display rounded-lg !p-3 border !min-h-11 flex items-center justify-center text-center">
               {{ totalSleepTime }}
             </div>
           </div>
         </div>
         
         <!-- Sleep Quality Section -->
-        <div class="quality-section">
-          <h3 class="section-header">Sleep Quality (1-10)</h3>
-          <div class="slider-container">
+        <div class="quality-section !mb-6">
+          <h3 class="section-header !mb-2">Sleep Quality (1-10)</h3>
+          <div class="slider-container flex items-center !gap-4 !mb-6">
             <input 
               id="quality-range" 
               type="range" 
               min="1" 
               max="10" 
               v-model="sleepQuality"
-              class="custom-range-slider"
+              class="custom-range-slider flex-1 !h-2 rounded-2xl outline-none cursor-pointer transition-all duration-200"
             >
-            <div class="quality-display">
+            <div class="quality-display flex items-center !gap-3">
               <span class="quality-number">{{ sleepQuality }}</span>
-              <img ref="starIcon" src="@/assets/img/star.svg" alt="star" class="star-icon">
+              <img ref="starIcon" src="@/assets/img/star.svg" alt="star" class="star-icon !w-7 !h-7">
             </div>
           </div>
         </div>
         
         <!-- Dream Journal Section -->
-        <div class="dream-section">
-          <h3 class="section-header">Dream Entry</h3>
-          <div class="textarea-container">
+        <div class="dream-section !mb-6">
+          <h3 class="section-header !mb-2">Dream Entry</h3>
+          <div class="textarea-container rounded-lg p-1 !mb-6">
             <textarea 
               v-model="dreamJournal" 
               placeholder="Describe your dreams..."
-              class="dream-textarea"
+              class="dream-textarea !w-full !min-h-24 bg-transparent border-none !p-3 resize-y focus:outline-none"
               @input="resetError"
             ></textarea>
           </div>
         </div>
         
         <!-- Tags Section -->
-        <div class="tags-section">
-          <h3 class="section-header">Tags</h3>
-          <div class="tags-container">
+        <div class="tags-section !mb-8">
+          <h3 class="section-header !mb-2">Tags</h3>
+          <div class="tags-container rounded-lg !p-1">
             <input 
               type="text" 
               v-model="tags" 
               placeholder="e.g., vivid, nightmare, lucid"
-              class="tags-input"
+              class="tags-input !w-full bg-transparent border-none !p-3 focus:outline-none"
               @input="resetError"
             >
           </div>
         </div>
         
         <!-- Action Buttons -->
-        <div class="button-section">
-          <button @click="saveSleepLog" :disabled="saving" class="save-button">
+        <div class="button-section flex !gap-12 justify-center">
+          <button @click="saveSleepLog" :disabled="saving" class="save-button !px-8 !py-3 border-none rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5">
             {{ saving ? 'Saving...' : 'Save sleep log' }}
           </button>
-          <button @click="closeForm" class="cancel-button">Cancel</button>
+          <button @click="closeForm" class="cancel-button !px-8 !py-3 border-none rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5">Cancel</button>
         </div>
         
       </div>
@@ -87,6 +88,7 @@
 </template>
 
 <script setup>
+// Keep your existing script exactly the same
 import { onMounted, ref, watch } from 'vue'
 import { animate } from 'animejs'
 import { useSleepLogs } from '@/modules/useSleepLogs'
@@ -118,7 +120,6 @@ const {
   saving
 
 } = useSleepLogs()
-
 
 // Template refs
 const starIcon = ref(null)
@@ -160,146 +161,75 @@ onMounted(() => {
   }
 })
 
-
 // Expose methods for parent components
 defineExpose({
   openForm,
   closeForm
 })
-
 </script>
 
 <style scoped>
+/* ✅ ONLY CSS VARIABLES AND BROWSER-SPECIFIC PROPERTIES REMAIN */
 
 /* Modal Overlay */
-
 .modal-overlay {
-  position: fixed !important;
-  inset: 0 !important;
   background-color: rgba(10, 17, 35, 0.8) !important;
-  backdrop-filter: blur(5px) !important;
-  z-index: 1000 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 2rem !important;
 }
 
 /* Form Container */
 .sleep-form-container {
   background-color: #3A3E6C !important;
-  border-radius: 1rem !important;
-  padding: 2rem !important;
-  max-width: 600px !important;
-  width: 100% !important;
-  max-height: 90vh !important;
-  overflow-y: auto !important;
 }
 
 /* Title */
 .form-title {
   color: var(--color-cream) !important;
   font-family: var(--font-serif) !important;
-  font-size: var(--font-size-2xl) !important;
-  text-align: center !important;
-  margin-bottom: 2rem !important;
+  font-size: var(--font-size-2xl) !important;;
 }
 
 /* Section Headers */
 .section-header {
   color: var(--color-cream) !important;
-  font-family: var(--font-sans) !important;
   font-size: var(--font-size-base) !important;
-  margin-bottom: 0.5rem !important;
 }
 
 /* Time Inputs */
-.time-section {
-  display: flex !important;
-  gap: 2rem !important;
-  margin-bottom: 1.5rem !important;
-}
-
 .time-input {
   background-color: var(--color-cream) !important;
   color: var(--color-midnight) !important;
-  border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
-  border-radius: 0.5rem !important;
-  padding: 0.75rem !important;
+  border-color: color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
   font-family: var(--font-sans) !important;
 }
 
-/* total sleep display */
-
-.sleep-total-group {
-  display: flex !important;
-  flex-direction: column !important;
-}
-
+/* Total Sleep Display */
 .sleep-total-display {
   background-color: var(--color-sand) !important;
   color: var(--color-midnight) !important;
-  border: 1px solid color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
-  border-radius: 0.5rem !important;
-  padding: 0.75rem !important;
+  border-color: color-mix(in srgb, var(--color-lavender) 30%, transparent) !important;
   font-family: var(--font-sans) !important;
   font-weight: 600 !important;
-  text-align: center !important;
-  min-height: 2.75rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
 }
 
-.time-section {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
-  gap: 1rem !important;
-  margin-bottom: 1.5rem !important;
-}
-
+/* Error Message */
 .error-message {
-  display: block !important;
   background-color: color-mix(in srgb, #dc2663 15%, transparent) !important;
   border: 1px solid color-mix(in srgb, #dc2663 40%, transparent) !important;
   color: #ff6b6b !important;
   font-family: var(--font-sans) !important;
-  font-size: var(--font-size-sm) !important;
-  text-align: center !important;
-  padding: 0.75rem !important;
-  margin-bottom: 1rem !important;
-  border-radius: 0.5rem !important;
 }
 
-
-
-
-
-/* Quality Slider */
-.slider-container {
-  display: flex !important;
-  align-items: center !important;
-  gap: 1rem !important;
-  margin-bottom: 1.5rem !important;
-}
-
-/* Custom Range Slider - Replaces the old quality-slider */
+/* Custom Range Slider - Browser-specific properties that can't be done with Tailwind */
 .custom-range-slider {
-  flex: 1 !important;
-  height: 0.6rem !important;
-  border-radius: 1rem !important;
-  background: var(--color-midnight) !important; /* Track color - midnight blue */
-  outline: none !important;
+  background: var(--color-midnight) !important;
   -webkit-appearance: none !important;
   appearance: none !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
 }
 
 /* Webkit browsers (Chrome, Safari, Edge) - Track */
 .custom-range-slider::-webkit-slider-track {
-  height: 8px !important;
-  border-radius: 5px !important;
+  height: 1.5rem !important;
+  border-radius: 2% !important;
   background: var(--color-gold) !important;
   border: none !important;
 }
@@ -325,71 +255,34 @@ defineExpose({
   box-shadow: 0 4px 12px rgba(131, 135, 195, 0.4) !important;
 }
 
-/* Webkit browsers - Thumb active */
-.custom-range-slider::-webkit-slider-thumb:active {
-  transform: scale(1.15) !important;
-}
-
-
+/* Quality Display */
 .quality-display {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.8rem !important;
   color: var(--color-gold) !important;
   font-family: var(--font-sans) !important;
   font-size: var(--font-size-3xl) !important;
 }
 
-.star-icon {
-  width: 1.7rem !important;
-  height: 1.7rem !important;
-}
-
-
-
-
-
 /* Dream Textarea */
 .textarea-container {
   background-color: #0A1123 !important;
-  border-radius: 0.5rem !important;
-  padding: 0.25rem !important;
-  margin-bottom: 1.5rem !important;
 }
 
 .dream-textarea {
-  width: 100% !important;
-  min-height: 100px !important;
-  background: transparent !important;
   color: var(--color-cream) !important;
-  border: none !important;
-  padding: 0.75rem !important;
   font-family: var(--font-sans) !important;
-  resize: vertical !important;
 }
 
 .dream-textarea::placeholder {
   color: var(--color-cream) !important;
 }
 
-.dream-textarea:focus {
-  outline: none !important;
-}
-
 /* Tags Input */
 .tags-container {
   background-color: #0A1123 !important;
-  border-radius: 0.5rem !important;
-  padding: 0.25rem !important;
-  margin-bottom: 2rem !important;
 }
 
 .tags-input {
-  width: 100% !important;
-  background: transparent !important;
   color: var(--color-cream) !important;
-  border: none !important;
-  padding: 0.75rem !important;
   font-family: var(--font-sans) !important;
 }
 
@@ -397,26 +290,11 @@ defineExpose({
   color: var(--color-cream) !important;
 }
 
-.tags-input:focus {
-  outline: none !important;
-}
-
 /* Action Buttons */
-.button-section {
-  display: flex !important;
-  gap: 3rem !important;
-  justify-content: center !important;
-}
-
 .save-button, .cancel-button {
   font-family: var(--font-sans) !important;
   font-size: var(--font-size-base) !important;
   font-weight: 600 !important;
-  padding: 0.75rem 2rem !important;
-  border: none !important;
-  border-radius: 0.5rem !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
 }
 
 .save-button {
@@ -426,7 +304,6 @@ defineExpose({
 
 .save-button:hover {
   background-color: var(--color-gold) !important;
-  transform: translateY(-2px) !important;
 }
 
 .cancel-button {
@@ -436,6 +313,5 @@ defineExpose({
 
 .cancel-button:hover {
   background-color: #ff6b6b !important;
-  transform: translateY(-2px) !important;
 }
 </style>
