@@ -79,7 +79,7 @@
           <button @click="saveSleepLog" :disabled="saving" class="save-button !px-8 !py-3 border-none rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5">
             {{ saving ? 'Saving...' : 'Save sleep log' }}
           </button>
-          <button @click="closeForm" class="cancel-button !px-8 !py-3 border-none rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5">Cancel</button>
+          <button @click="closeForm" :disabled="loading" class="cancel-button !px-8 !py-3 border-none rounded-lg cursor-pointer transition-all duration-300 hover:-translate-y-0.5">Cancel</button>
         </div>
         
       </div>
@@ -92,6 +92,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { animate } from 'animejs'
 import { useSleepLogs } from '@/modules/useSleepLogs'
+import { useAuth } from '../modules/useAuth'
 
 const { 
   // Form state
@@ -120,6 +121,10 @@ const {
   saving
 
 } = useSleepLogs()
+
+
+const { loading } = useAuth();
+
 
 // Template refs
 const starIcon = ref(null)

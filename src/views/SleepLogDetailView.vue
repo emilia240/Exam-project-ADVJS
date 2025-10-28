@@ -25,6 +25,7 @@
           
           <button 
             @click="handleDeleteSleepLog" 
+            :disabled="loading"
             class="delete-button flex items-center !gap-2 !px-4 !py-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5 border-none cursor-pointer font-semibold"
           >
             <img src="@/assets/img/delete.svg" alt="" class="!w-4 !h-4">
@@ -164,6 +165,7 @@ import { useSleepLogs } from '../modules/useSleepLogs.js'
 /* import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '../modules/firebase.js' */
 import { animate, stagger } from 'animejs'
+import { useAuth } from '../modules/useAuth.js'
 
 
 import DashboardNav from '../components/DashboardNav.vue'
@@ -183,6 +185,8 @@ const {
   deleteSleepLog
 } = useSleepLogs()
 
+
+const { loading } = useAuth();
 // Template refs
 const sleepFormRef = ref(null)
 
