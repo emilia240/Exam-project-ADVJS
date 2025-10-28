@@ -1,6 +1,7 @@
 import {onMounted, ref, computed} from 'vue'
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, where, orderBy } from "firebase/firestore";
 import { useAuth } from './useAuth.js'
+import { useRouter } from 'vue-router'
 
 
 import { db } from './firebase.js'
@@ -8,13 +9,12 @@ import { db } from './firebase.js'
 export function useSleepLogs() {
     console.log('🚀 useSleepLogs composable initialized')
 
-
+    const router = useRouter()
     const { currentUser } = useAuth(); // Get the current user from useAuth
     console.log('👤 Current user from useAuth:', currentUser.value)
 
     const sleepLogsCollectionRef = 'sleepLogs' //name of the collection in firebase
     const sleepLogs = ref([]); //array to hold the posts from firebase
-    const newSleepLogTitle = ref(''); //to hold the newSleepLogTitle
     const showError = ref(false); 
 
     // Form state variables
@@ -30,9 +30,6 @@ export function useSleepLogs() {
     const saving = ref(false) // indicates if a save operation is in progress
     const errorMessage = ref('') // holds error messages for display
 
-    // Edit functionality
-    const editingId = ref(null) // Track which log is being edited
-    const editTitle = ref('') // Hold the edited title
 
 
     // Helper function to calculate sleep hours
@@ -163,7 +160,7 @@ export function useSleepLogs() {
         console.log('✅ Form reset successfully')
     }
 
-
+    //CREATE
     // Save sleep log to Firestore (main form logic)
     const saveSleepLog = async () => {
         console.log('💾 saveSleepLog called')
@@ -213,7 +210,76 @@ export function useSleepLogs() {
         }
     }
 
-      // REAL-TIME LISTENER - fetch only current user's sleep logs
+
+    //UPDATE
+    // Update existing sleep log (for SleepLogDetailView)
+    const saveSleepLogChanges = async (logId, editData) => {
+        if (!logId) {
+            console.log('❌ saveSleepLogChanges aborted: no log ID provided')
+            return false
+        }
+        
+        console.log('💾 Saving sleep log changes for ID:', logId)
+        saving.value = true
+        resetError()
+        
+        try {
+            // Calculate hours slept
+            const hoursSlept = calculateSleepHours(editData.bedTime, editData.wakeTime)
+            
+            const updateData = {
+                bedTime: editData.bedTime,
+                wakeTime: editData.wakeTime,
+                hoursSlept: parseFloat(hoursSlept.toFixed(1)),
+                sleepQuality: parseInt(editData.sleepQuality),
+                dreamJournal: editData.dreamJournal.trim(),
+                tags: editData.tags.trim(),
+                updatedAt: new Date()
+            }
+            
+            await updateDoc(doc(db, sleepLogsCollectionRef, logId), updateData)
+            
+            console.log('✅ Sleep log updated successfully!')
+            return true
+            
+        } catch (error) {
+            console.error('❌ Error updating sleep log:', error)
+            errorMessage.value = 'Failed to save changes. Please try again.'
+            showError.value = true
+            return false
+        } finally {
+            saving.value = false
+        }
+    }
+
+    //DELETE
+    // Delete sleep log (for SleepLogDetailView)
+    const deleteSleepLog = async (logId) => {
+        if (!logId) {
+            console.log('❌ deleteSleepLog aborted: no log ID provided')
+            return false
+        }
+        
+        console.log('🗑️ Deleting sleep log with ID:', logId)
+        
+        try {
+            await deleteDoc(doc(db, sleepLogsCollectionRef, logId))
+            console.log('✅ Sleep log deleted successfully!')
+            
+            // Navigate back to sleep logs list
+            router.push('/sleep-logs')
+            return true
+            
+        } catch (error) {
+            console.error('❌ Error deleting sleep log:', error)
+            errorMessage.value = 'Failed to delete sleep log. Please try again.'
+            showError.value = true
+            return false
+        }
+    }
+
+
+    // REAL-TIME LISTENER - fetch only current user's sleep logs
     onMounted(() => {
         console.log('🔄 onMounted called')
         console.log('👤 Current user in onMounted:', currentUser.value)
@@ -244,114 +310,10 @@ export function useSleepLogs() {
         }
     })
 
-
-    //CREATE a new sleep log
-    // Legacy methods (for your existing Dashboard)
-    const addSleepLog = async () => {
-        console.log('➕ addSleepLog (legacy) called with title:', newSleepLogTitle.value)
-
-        if (newSleepLogTitle.value.trim() === '') {
-            console.log('❌ addSleepLog failed: empty title')
-
-            showError.value = true
-        return
-        }
-
-        if (!currentUser.value) {
-            console.error('❌ addSleepLog failed: user not logged in')
-        return
-        }
-
-        try {
-        console.log('➕ Adding legacy sleep log to Firestore...')
-
-        await addDoc(collection(db, sleepLogsCollectionRef), {
-            title: newSleepLogTitle.value,
-            userId: currentUser.value.uid,
-            userEmail: currentUser.value.email,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        })
-
-        console.log('✅ Legacy sleep log added successfully')
-        newSleepLogTitle.value = ''
-        showError.value = false
-        } 
-        catch (error) {
-            console.error('❌ Error adding legacy sleep log:', error)
-        }
-    }
-
-    
-
-    // START EDITING a sleep log
-    const startEdit = (id, currentTitle) => {
-        console.log('✏️ startEdit called for id:', id, 'title:', currentTitle)
-
-        editingId.value = id
-        editTitle.value = currentTitle
-        console.log('✅ Edit mode activated')
-    }
-
-    // CANCEL EDITING
-    const cancelEdit = () => {
-        console.log('🚫 cancelEdit called')
-
-        editingId.value = null
-        editTitle.value = ''
-        console.log('✅ Edit mode cancelled')
-    }
-
-    // UPDATE a sleep log
-    const updateSleepLog = async (id) => {
-        console.log('💾 updateSleepLog called for id:', id, 'new title:', editTitle.value)
-
-
-        if (editTitle.value.trim() === '') {
-            console.log('❌ Update failed: empty title')
-            showError.value = true
-        return
-        }
-
-        try {
-        console.log('💾 Updating sleep log in Firestore...')
-
-        await updateDoc(doc(db, sleepLogsCollectionRef, id), {
-            title: editTitle.value,
-            updatedAt: new Date()
-        })
-
-        console.log('✅ Sleep log updated successfully')
-        editingId.value = null
-        editTitle.value = ''
-        showError.value = false
-        } 
-        catch (error) {
-            console.error('❌ Error updating sleep log:', error)
-        }
-    }
-
-    //DELETE a sleep log
-    const deleteSleepLog = async (id) => {
-        console.log('🗑️ deleteSleepLog called for id:', id)
-
-        try {
-            console.log('🗑️ Deleting sleep log from Firestore...')
-            await deleteDoc(doc(db, sleepLogsCollectionRef, id))
-            console.log('✅ Sleep log deleted successfully')
-        } 
-        catch (error) {
-            console.log('❌ Error deleting sleep log:', error)
-        }    
-   }
-
-
-  console.log('🎯 useSleepLogs composable setup complete, returning functions')
    
   return { 
     // Sleep logs data
     sleepLogs, 
-    newSleepLogTitle, 
     
     // Form state
     isOpen,
@@ -376,19 +338,17 @@ export function useSleepLogs() {
     openForm,
     closeForm,
     handleOverlayClick,
-    saveSleepLog,
     
+    
+    // CRUD operations for detail view
+    saveSleepLog,
+    saveSleepLogChanges,
+    deleteSleepLog,
+
+
     // Loading state
     saving,
     
-    // Legacy CRUD operations
-    addSleepLog, 
-    deleteSleepLog, 
-    editingId, 
-    editTitle, 
-    startEdit, 
-    cancelEdit, 
-    updateSleepLog 
   }
 
 }

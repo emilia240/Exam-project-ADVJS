@@ -15,7 +15,7 @@
         <!-- Action Buttons -->
         <div class="action-buttons flex items-center !gap-3">
           <button 
-            @click="saveSleepLogChanges" 
+            @click="handleSaveSleepLogChanges" 
             :disabled="saving" 
             class="save-button flex items-center !gap-2 !px-4 !py-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5 border-none cursor-pointer font-semibold"
           >
@@ -24,7 +24,7 @@
           </button>
           
           <button 
-            @click="confirmDelete" 
+            @click="handleDeleteSleepLog" 
             class="delete-button flex items-center !gap-2 !px-4 !py-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5 border-none cursor-pointer font-semibold"
           >
             <img src="@/assets/img/delete.svg" alt="" class="!w-4 !h-4">
@@ -161,8 +161,8 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
-import { db } from '../modules/firebase.js'
+/* import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { db } from '../modules/firebase.js' */
 import { animate, stagger } from 'animejs'
 
 
@@ -178,7 +178,9 @@ const {
   errorMessage, 
   resetError,
   saving,
-  calculateSleepHours
+  calculateSleepHours,
+  saveSleepLogChanges,
+  deleteSleepLog
 } = useSleepLogs()
 
 // Template refs
@@ -221,6 +223,9 @@ const openSleepForm = () => {
   sleepFormRef.value?.openForm()
 }
 
+
+//RETRIEVE?
+//function for loading current log data into editable fields(pre-filled form ready for editing)
 const loadCurrentLogData = () => {
   if (currentLog.value) {
     console.log('📊 Loading current log data:', currentLog.value)
@@ -249,69 +254,10 @@ const markAsChanged = () => {
   hasUnsavedChanges.value = true
 }
 
-const saveSleepLogChanges = async () => {
-  if (!currentLog.value) return
-  
-  console.log('💾 Saving sleep log changes...')
-  saving.value = true
-  resetError()
-  
-  try {
-    // Calculate hours slept
-    const hoursSlept = calculateSleepHours(editBedTime.value, editWakeTime.value)
-    
-    const updateData = {
-      bedTime: editBedTime.value,
-      wakeTime: editWakeTime.value,
-      hoursSlept: parseFloat(hoursSlept.toFixed(1)),
-      sleepQuality: parseInt(editSleepQuality.value),
-      dreamJournal: editDreamJournal.value.trim(),
-      tags: editTags.value.trim(),
-      updatedAt: new Date()
-    }
-    
-    await updateDoc(doc(db, 'sleepLogs', currentLog.value.id), updateData)
-    
-    console.log('✅ Sleep log updated successfully!')
-    hasUnsavedChanges.value = false
-    
-    // Update original data
-    originalData.value = {
-      bedTime: editBedTime.value,
-      wakeTime: editWakeTime.value,
-      sleepQuality: editSleepQuality.value,
-      dreamJournal: editDreamJournal.value,
-      tags: editTags.value
-    }
-    
-  } catch (error) {
-    console.error('❌ Error updating sleep log:', error)
-    errorMessage.value = 'Failed to save changes. Please try again.'
-    showError.value = true
-  } finally {
-    saving.value = false
-  }
-}
 
 const confirmDelete = () => {
   if (confirm('Are you sure you want to delete this sleep log? This action cannot be undone.')) {
-    deleteSleepLogEntry()
-  }
-}
-
-const deleteSleepLogEntry = async () => {
-  if (!currentLog.value) return
-  
-  console.log('🗑️ Deleting sleep log...')
-  
-  try {
-    await deleteDoc(doc(db, 'sleepLogs', currentLog.value.id))
-    console.log('✅ Sleep log deleted successfully!')
-    router.push('/sleep-logs')
-  } catch (error) {
-    console.error('❌ Error deleting sleep log:', error)
-    errorMessage.value = 'Failed to delete sleep log. Please try again.'
-    showError.value = true
+    deleteSleepLog()
   }
 }
 
@@ -356,6 +302,42 @@ const animateDetailCards = () => {
     
     console.log('✅ Detail cards animation completed')
   }
+}
+
+//why?
+const handleSaveSleepLogChanges = async () => {
+  if (!currentLog.value) return
+  
+  const editData = {
+    bedTime: editBedTime.value,
+    wakeTime: editWakeTime.value,
+    sleepQuality: editSleepQuality.value,
+    dreamJournal: editDreamJournal.value,
+    tags: editTags.value
+  }
+  
+  const success = await saveSleepLogChanges(currentLog.value.id, editData)
+  
+  if (success) {
+    hasUnsavedChanges.value = false
+    
+    // Update original data
+    originalData.value = {
+      bedTime: editBedTime.value,
+      wakeTime: editWakeTime.value,
+      sleepQuality: editSleepQuality.value,
+      dreamJournal: editDreamJournal.value,
+      tags: editTags.value
+    }
+  }
+}
+
+//why?
+const handleDeleteSleepLog = async () => {
+  if (!currentLog.value) return
+  
+  await deleteSleepLog(currentLog.value.id)
+  // Navigation is handled by the composable
 }
 
 
