@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuth } from '@/modules/useAuth'
+import { useAuth, authReady } from '@/modules/useAuth'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
@@ -39,7 +39,11 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from, next) => {
+
+router.beforeEach(async (to, from, next) => {
+  // Wait for Firebase auth to initialize before checking auth state
+  await authReady
+  
   //destructure the isLoggedIn property from useAuth
   const {isLoggedIn} = useAuth()
   if (to.meta.requiresAuth && !isLoggedIn.value) {
@@ -48,5 +52,6 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
 
 export default router

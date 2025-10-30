@@ -94,13 +94,13 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useAuth } from '../modules/useAuth.js'
+// import { useAuth } from '../modules/useAuth.js'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
 import { useSleepLogListAnimations } from '../composables/animations/useSleepLogListAnimations.js'
 import DashboardNav from '../components/DashboardNav.vue'
 import SleepLogForm from '../components/SleepLogForm.vue'
 
-const { currentUser } = useAuth()
+// const { currentUser } = useAuth()
 const { sleepLogs } = useSleepLogs()
 const { initializeSleepLogListAnimations } = useSleepLogListAnimations()
 

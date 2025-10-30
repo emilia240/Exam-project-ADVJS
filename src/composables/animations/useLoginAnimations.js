@@ -1,12 +1,10 @@
 import { ref } from 'vue'
 import { animate } from 'animejs'
 import { useRouter } from 'vue-router'
-import { useTransition } from './shared/useTransition'
 
 
 export function useLoginAnimations() {
     const router = useRouter()
-    const { showLoadingOverlay } = useTransition()
 
     // Template refs
     const loginCard = ref(null)
@@ -15,6 +13,7 @@ export function useLoginAnimations() {
 
     // Entrance animations when component mounts
     const startEntranceAnimations = () => {
+  
         console.log('🎬 Starting login entrance animations')
         
         // Set initial states (invisible)
@@ -69,42 +68,7 @@ export function useLoginAnimations() {
         console.log('✅ Logo animation started')
     }
 
-    // Success transition animation
-    const handleSuccessTransition = () => {
-        console.log('🎬 Starting success transition animations')
-        
-        // Step 1: Animate success message in (if it exists)
-        if (successMessage.value) {
-            console.log('🎬 Animating success message')
-            animate(successMessage.value, {
-                scale: [0.8, 1.1, 1],
-                opacity: [0, 1],
-                duration: 600,
-                ease: 'spring(1, 80, 10, 0)'
-            })
-        }
-
-        // Step 2: Wait 1.5s, then start exit animation
-        setTimeout(() => {
-            console.log('🎬 Starting exit animation')
-            // Fade out the login card
-            animate(loginCard.value, {
-                opacity: 0,
-                scale: 0.9,
-                y: -30,
-                duration: 300,
-                ease: 'out(2)',
-                complete: () => {
-                    console.log('✅ Exit animation complete, showing loading overlay')
-                    // Step 3: Use shared loading overlay function
-                    showLoadingOverlay('Loading Dashboard...', '/dashboard', router)
-                }
-            })
-        }, 1500)
-    }
-
-   
-
+    
     return {
         // Template refs (to be assigned in component)
         loginCard,
@@ -114,7 +78,6 @@ export function useLoginAnimations() {
         // Animation functions
         startEntranceAnimations,
         animateLogo,
-        handleSuccessTransition,
 
     }
 }

@@ -145,7 +145,7 @@
 
 <!-- For logins is smarter to keep the variables in this component -->
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuth } from '../modules/useAuth'
 import { useLoginAnimations } from '@/composables/animations/useLoginAnimations'
@@ -160,7 +160,6 @@ const {
   successMessage, 
   logoRef, 
   startEntranceAnimations, 
-  handleSuccessTransition 
 } = useLoginAnimations()
 
 // Form toggle state
@@ -176,22 +175,6 @@ const regBirthDate = ref('')
 const regEmail = ref('')
 const regPassword = ref('')
 
-
-
-// Start animations when component mounts
-onMounted(() => {
-  startEntranceAnimations()
-})
-
-// Watch for successful login and trigger transition
-watch(isLoggedIn, (newValue) => {
-  if (newValue && (successMessage.value || loginCard.value)) {
-    handleSuccessTransition()
-  }
-})
-
-
-
 // Toggle between login and register forms
 const toggleForm = () => {
   isRegistering.value = !isRegistering.value
@@ -200,17 +183,43 @@ const toggleForm = () => {
 }
 
 // Login function
-const loginUser = () => {
-  login(email.value, password.value)
+const loginUser = async () => {
+  try {
+    await login(email.value, password.value)
+    // If login is successful, redirect will be handled by the watcher
+  } catch (error) {
+    console.error('Login failed:', error)
+  }
 }
 
 // Register function
-const registerUser = () => {
-  register(regEmail.value, regPassword.value, {
-    userName: regUserName.value,
-    birthDate: regBirthDate.value
-  })
+const registerUser = async () => {
+  try {
+    await register(regEmail.value, regPassword.value, {
+      userName: regUserName.value,
+      birthDate: regBirthDate.value
+    })
+    // If registration is successful, redirect will be handled by the watcher
+  } catch (error) {
+    console.error('Registration failed:', error)
+  }
 }
+
+// Watch for successful login/registration and redirect
+watch(isLoggedIn, (newValue) => {
+  if (newValue) {
+    console.log('✅ Login successful, redirecting to dashboard')
+    // Show success message briefly, then redirect
+    setTimeout(() => {
+      router.push('/dashboard')
+    }, 1500)
+  }
+})
+
+// Start animations when component mounts
+onMounted(() => {
+  startEntranceAnimations()
+})
 
 
 </script>
@@ -323,45 +332,7 @@ const registerUser = () => {
   font-size: var(--font-size-sm);
 }
 
-/* Loading Overlay Styles (will be injected) */
-:global(.loading-overlay) {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(10, 17, 35, 0.9);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-:global(.loading-content) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-:global(.loading-spinner) {
-  width: 3rem;
-  height: 3rem;
-  border: 4px solid color-mix(in srgb, var(--color-lavender) 30%, transparent);
-  border-top: 4px solid var(--color-gold);
-  border-radius: 50%;
-  animation: spin 0.4s linear infinite;
-}
-
-:global(.loading-text) {
-  color: var(--color-text-light);
-  font-family: var(--font-serif);
-  font-size: var(--font-size-lg);
-  margin-top: 1.5rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 
 /* Success Message Enhancement */
 .success-message {

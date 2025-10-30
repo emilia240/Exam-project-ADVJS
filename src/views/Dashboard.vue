@@ -131,7 +131,7 @@
 
 <script setup>
 import { onMounted, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 import { useAuth } from '../modules/useAuth.js'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
 import { useLogoAnimations } from '../composables/animations/shared/useLogoAnimations.js'
@@ -139,7 +139,7 @@ import { useDashboardAnimations } from '@/composables/animations/useDashboardAni
 import DashboardNav from '../components/DashboardNav.vue'
 import SleepLogForm from '../components/SleepLogForm.vue'
 
-const router = useRouter()
+// const router = useRouter()
 const { currentUser } = useAuth()
 const { sleepLogs } = useSleepLogs()
 const { startLogoPulsing } = useLogoAnimations()
@@ -183,14 +183,8 @@ const getTagsArray = (tagsString) => {
 }
 
 
-// Clean up loading overlay when Dashboard mounts
 onMounted(() => {
-  // Remove the loading overlay created in LoginView
-  const loadingOverlay = document.querySelector('.loading-overlay')
-  if (loadingOverlay) {
-    loadingOverlay.remove()
-    console.log('🧹 Loading overlay removed')
-  }
+  console.log('📱 Dashboard mounted')
   
   // Start logo animation
   startLogoPulsing(dashboardLogo.value)

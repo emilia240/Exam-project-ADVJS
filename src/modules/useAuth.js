@@ -14,8 +14,15 @@ const isLoggedIn = computed(() => !!currentUser.value) // returns true if curren
 const authError = ref(null);
 const loading = ref(false);
 
+// Add auth ready promise to wait for Firebase auth initialization
+let resolveAuthReady
+export const authReady = new Promise((resolve) => {
+    resolveAuthReady = resolve
+})
+
 onAuthStateChanged(auth, (user) => {
     currentUser.value = user
+    resolveAuthReady() // resolve when auth state is known
 })
 
 const login = async (email, password) => {

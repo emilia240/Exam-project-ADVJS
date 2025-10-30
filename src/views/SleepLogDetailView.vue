@@ -259,11 +259,11 @@ const markAsChanged = () => {
 }
 
 
-const confirmDelete = () => {
+/* const confirmDelete = () => {
   if (confirm('Are you sure you want to delete this sleep log? This action cannot be undone.')) {
     deleteSleepLog()
   }
-}
+} */
 
 const formatTimestamp = (timestamp) => {
   if (!timestamp) return 'Unknown'
@@ -340,10 +340,12 @@ const handleSaveSleepLogChanges = async () => {
 const handleDeleteSleepLog = async () => {
   if (!currentLog.value) return
   
-  await deleteSleepLog(currentLog.value.id)
-  // Navigation is handled by the composable
+  const success = await deleteSleepLog(currentLog.value.id)
+  if (success) {
+    // Navigate back to sleep logs list after successful deletion
+    router.push('/sleep-logs')
+  }
 }
-
 
 // Watch for log changes and reload data
 watch(currentLog, (newLog) => {
