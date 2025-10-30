@@ -2,8 +2,6 @@ import {onMounted, ref, computed} from 'vue'
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, where, orderBy } from "firebase/firestore";
 import { useAuth } from './useAuth.js'
 import { useRouter } from 'vue-router'
-
-
 import { db } from './firebase.js'
 
 export function useSleepLogs() {

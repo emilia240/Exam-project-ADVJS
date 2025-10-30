@@ -70,6 +70,21 @@
             </button>
           </div>
         </div>
+        <!-- Simple Loading Indicator -->
+        <div v-if="isLoadingMore" class="loading-more !flex !justify-center !items-center !py-8">
+          <div class="!flex !items-center !gap-3">
+            <img src="@/assets/img/cloud.svg" alt="" class="!w-6 !h-6 animate-pulse">
+            <span class="loading-text">Loading more dreams...</span>
+          </div>
+        </div>
+        
+        <!-- End Message -->
+        <div v-if="allLogsLoaded && sleepLogs.length > 0" class="all-loaded !flex !justify-center !items-center !py-8">
+          <div class="!flex !items-center !gap-2">
+            <img src="@/assets/img/star.svg" alt="" class="!w-5 !h-5">
+            <span class="end-text">You've seen all your dreams ✨</span>
+          </div>
+        </div>
       </section>
 
     </div>
@@ -77,7 +92,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuth } from '../modules/useAuth.js'
 import { useSleepLogs } from '../modules/useSleepLogs.js'
@@ -112,10 +127,46 @@ const getTagsArray = (tagsString) => {
   return tagsString.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
 }
 
+//SIMPLE INFINITE SCROLL
+
+// Add these refs
+const isLoadingMore = ref(false)
+const allLogsLoaded = ref(false)
+
+// Add scroll listener
+const handleScroll = async () => {
+  if (isLoadingMore.value || allLogsLoaded.value) return
+  
+  const scrollTop = window.scrollY
+  const windowHeight = window.innerHeight
+  const documentHeight = document.documentElement.scrollHeight
+  
+  // If near bottom (200px from end)
+  if (scrollTop + windowHeight >= documentHeight - 500) {
+    console.log('🔄 Loading more logs...')
+    isLoadingMore.value = true
+    
+    // Simulate loading more (replace with your actual data fetching)
+    setTimeout(() => {
+      // For now, just stop after first load to prevent infinite loop
+      allLogsLoaded.value = true
+      isLoadingMore.value = false
+      console.log('✅ All logs loaded')
+    }, 1000)
+  }
+}
+
+
 // Initialize animations when component mounts
 onMounted(() => {
   // Initialize scroll animations for the sleep log cards
   initializeSleepLogListAnimations()
+  window.addEventListener('scroll', handleScroll)
+})
+
+// Cleanup scroll listener on unmount
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -202,6 +253,18 @@ onMounted(() => {
 
 .new-log-button:hover {
   background-color: var(--color-lavender);
+}
+
+/* Simple loading styles */
+.loading-text, .end-text {
+  color: var(--color-text-light);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+}
+
+.end-text {
+  color: var(--color-lavender);
+  font-style: italic;
 }
 
 /* Responsive adjustments */
