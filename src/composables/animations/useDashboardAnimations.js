@@ -7,16 +7,15 @@ export function useDashboardAnimations() {
     const { createScrollObserver } = useScrollAnimations()
     
     // Template refs for animations
-    const welcomeTitle = ref(null)
     const recentLogsCards = ref([])
 
     // Welcome Title Animation - Same as HomeView hero text
-    const animateWelcomeTitle = () => {
+    const animateWelcomeTitle = (welcomeTitleElement) => {
         console.log('🎬 Starting welcome title animation')
         
-        if (welcomeTitle.value) {
+        if (welcomeTitleElement) {
             // Set initial state
-            animate(welcomeTitle.value, {
+            animate(welcomeTitleElement, {
                 opacity: 0,
                 y: 40,
                 duration: 0
@@ -24,7 +23,7 @@ export function useDashboardAnimations() {
             
             // Animate on load (since welcome is immediately visible)
             setTimeout(() => {
-                animate(welcomeTitle.value, {
+                animate(welcomeTitleElement, {
                     opacity: 1,
                     y: 0,
                     duration: 800,
@@ -96,11 +95,11 @@ export function useDashboardAnimations() {
     }
 
     // Initialize all scroll-triggered animations
-    const initializeDashboardAnimations = () => {
+    const initializeDashboardAnimations = (welcomeTitleElement) => {
         console.log('🔄 Initializing dashboard animations')
         
         // Animate welcome title immediately (always visible)
-        animateWelcomeTitle()
+        animateWelcomeTitle(welcomeTitleElement)
         
         // Set up scroll observer for recent log cards section
         const recentLogsSection = document.querySelector('.recent-logs-section')
@@ -119,7 +118,6 @@ export function useDashboardAnimations() {
 
     return {
         // Template refs
-        welcomeTitle,
         recentLogsCards,
         
         // Animation functions

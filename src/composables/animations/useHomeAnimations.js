@@ -7,13 +7,13 @@ export function useHomeAnimations() {
     const { createScrollObserver } = useScrollAnimations()
     
     // Template refs for animations
-    const heroText = ref(null)
+/*     const heroText = ref(null)
     const card1 = ref(null)
     const card2 = ref(null)
     const card3 = ref(null)
     const bannerHeader = ref(null)
     const didYouKnowIcon = ref(null)
-    const footerHeader = ref(null)
+    const footerHeader = ref(null) */
 
     // Fun hover animations for circles and did-you-know icon
     const setupHoverAnimations = () => {
@@ -88,12 +88,12 @@ export function useHomeAnimations() {
     }
 
     // Hero Text Animation - Simple slide up and fade in
-    const animateHeroText = () => {
+    const animateHeroText = (heroTextElement) => {
         console.log('🎬 Starting hero text animation')
         
-        if (heroText.value) {
+        if (heroTextElement) {
             // Set initial state
-            animate(heroText.value, {
+            animate(heroTextElement, {
                 opacity: 0,
                 y: 40,
                 duration: 0
@@ -101,7 +101,7 @@ export function useHomeAnimations() {
             
             // Animate on load (since hero is immediately visible)
             setTimeout(() => {
-                animate(heroText.value, {
+                animate(heroTextElement, {
                     opacity: 1,
                     y: 0,
                     duration: 800,
@@ -113,11 +113,11 @@ export function useHomeAnimations() {
     }
 
     // Feature Cards Animation - Slide up with stagger (ORIGINAL VERSION)
-    const animateCards = () => {
+    const animateCards = (card1Element, card2Element, card3Element) => {
         console.log('🎬 Starting cards stagger animation')
-        
-        const cards = [card1.value, card2.value, card3.value].filter(Boolean)
-        
+
+        const cards = [card1Element, card2Element, card3Element].filter(Boolean)
+
         if (cards.length > 0) {
             // Set initial state
             animate(cards, {
@@ -146,20 +146,20 @@ export function useHomeAnimations() {
         }
     }
 
-    // Banner Header Animation - Simple slide up (ORIGINAL VERSION)
-    const animateBannerHeader = () => {
+    // Banner Header Animation - Simple slide up
+    const animateBannerHeader = (bannerHeaderElement) => {
         console.log('🎬 Starting banner header animation')
         
-        if (bannerHeader.value) {
+        if (bannerHeaderElement) {
             // Set initial state
-            animate(bannerHeader.value, {
+            animate(bannerHeaderElement, {
                 opacity: 0,
                 y: 40,
                 duration: 0
             })
             
             // Animate
-            animate(bannerHeader.value, {
+            animate(bannerHeaderElement, {
                 opacity: 1,
                 y: 0,
                 duration: 700,
@@ -170,13 +170,13 @@ export function useHomeAnimations() {
         }
     }
 
-    // Did You Know Icon Animation - Bounce in (ORIGINAL VERSION)
-    const animateIcon = () => {
+    // Did You Know Icon Animation - Bounce in
+    const animateIcon = (iconElement) => {
         console.log('🎬 Starting icon animation')
         
-        if (didYouKnowIcon.value) {
+        if (iconElement) {
             // Set initial state
-            animate(didYouKnowIcon.value, {
+            animate(iconElement, {
                 opacity: 0,
                 scale: 0,
                 rotate: -180,
@@ -184,7 +184,7 @@ export function useHomeAnimations() {
             })
             
             // Animate
-            animate(didYouKnowIcon.value, {
+            animate(iconElement, {
                 opacity: 1,
                 scale: 1,
                 rotate: 0,
@@ -196,20 +196,20 @@ export function useHomeAnimations() {
         }
     }
 
-    // Footer Header Animation - Simple slide up (ORIGINAL VERSION)
-    const animateFooterHeader = () => {
+    // Footer Header Animation - Simple slide up
+    const animateFooterHeader = (footerHeaderElement) => {
         console.log('🎬 Starting footer header animation')
         
-        if (footerHeader.value) {
+        if (footerHeaderElement) {
             // Set initial state
-            animate(footerHeader.value, {
+            animate(footerHeaderElement, {
                 opacity: 0,
                 y: 30,
                 duration: 0
             })
             
             // Animate
-            animate(footerHeader.value, {
+            animate(footerHeaderElement, {
                 opacity: 1,
                 y: 0,
                 duration: 600,
@@ -220,43 +220,42 @@ export function useHomeAnimations() {
         }
     }
 
-    // Initialize all scroll-triggered animations (ORIGINAL LOGIC)
-    const initializeScrollAnimations = () => {
+    // Initialize all scroll-triggered animations
+    const initializeScrollAnimations = (elements) => {
         console.log('🔄 Initializing all scroll animations')
         
-        // Set up scroll observer for cards
-        if (card1.value) {
-            createScrollObserver(card1.value, animateCards)
+          // Set up scroll observer for cards
+        if (elements.card1) {
+            createScrollObserver(elements.card1, () => {
+                animateCards(elements.card1, elements.card2, elements.card3)
+            })
         }
 
         // Banner Header scroll observer
-        if (bannerHeader.value) {
-            createScrollObserver(bannerHeader.value, animateBannerHeader)
+        if (elements.bannerHeader) {
+            createScrollObserver(elements.bannerHeader, () => {
+                animateBannerHeader(elements.bannerHeader)
+            })
         }
 
         // Did You Know Icon scroll observer
-        if (didYouKnowIcon.value) {
-            createScrollObserver(didYouKnowIcon.value, animateIcon)
+        if (elements.didYouKnowIcon) {
+            createScrollObserver(elements.didYouKnowIcon, () => {
+                animateIcon(elements.didYouKnowIcon)
+            })
         }
 
         // Footer Header scroll observer
-        if (footerHeader.value) {
-            createScrollObserver(footerHeader.value, animateFooterHeader)
+        if (elements.footerHeader) {
+            createScrollObserver(elements.footerHeader, () => {
+                animateFooterHeader(elements.footerHeader)
+            })
         }
         
         console.log('✅ All scroll animations initialized')
     }
 
     return {
-        // Template refs
-        heroText,
-        card1,
-        card2,
-        card3,
-        bannerHeader,
-        didYouKnowIcon,
-        footerHeader,
-        
         // Animation functions
         animateHeroText,
         animateCards,
