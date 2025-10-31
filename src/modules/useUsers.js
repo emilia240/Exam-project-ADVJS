@@ -1,7 +1,7 @@
 import { ref, computed, onMounted } from 'vue'
-import { collection, onSnapshot, doc, updateDoc, query, orderBy, where } from "firebase/firestore"
-import { useAuth } from './useAuth.js'
+import { collection, onSnapshot, addDoc, doc, setDoc, query, orderBy, where } from "firebase/firestore"
 import { db } from './firebase.js'
+import { useAuth } from './useAuth.js'
 
 export function useUsers() {
     console.log('👥 useUsers composable initialized')
@@ -17,152 +17,124 @@ export function useUsers() {
     const allSleepLogs = ref([])
     const loading = ref(false)
     const error = ref('')
-    
-    // Check if current user is admin
-    const isAdmin = computed(() => {
-        if (!currentUser.value) return false
-        const currentUserData = users.value.find(user => user.email === currentUser.value.email)
-        return currentUserData?.role === 'admin'
-    })
-    
-    // Statistics
 
-    const totalUsers = computed(() => users.value.length)
-    const totalSleepLogs = computed(() => allSleepLogs.value.length)
-    const recentUsers = computed(() => {
-        return users.value
-            .sort((a, b) => new Date(b.createdAt?.toDate?.() || b.createdAt) - new Date(a.createdAt?.toDate?.() || a.createdAt))
-            .slice(0, 5)
-    }) 
-    
-    // User management functions
-    const changeUserRole = async (userId, newRole) => {
-        if (!isAdmin.value) {
-            error.value = 'Only admins can change user roles'
-            return false
-        }
-        
-        console.log(`👥 Changing user ${userId} role to ${newRole}`)
-        loading.value = true
+    // CREATE - Add new user profile to Firestore
+    const createUserProfile = async (userId, userData) => {
+        console.log('👥 Creating user profile for:', userId, userData)
         
         try {
-            await updateDoc(doc(db, usersCollectionRef, userId), {
-                role: newRole,
-                updatedAt: new Date()
-            })
+            const userProfileData = {
+                email: userData.email,
+                userName: userData.userName,
+                birthDate: userData.birthDate,
+                role: userData.role || 'user', // Default role
+                createdAt: new Date(),
+                lastLoginAt: new Date(),
+                userId: userId // Store the Firebase Auth UID
+            }
             
-            console.log('✅ User role updated successfully')
+            // Use setDoc with specific document ID (same as Auth UID)
+            await setDoc(doc(db, usersCollectionRef, userId), userProfileData)
+            
+            console.log('✅ User profile created successfully!')
             return true
             
-        } catch (err) {
-            console.error('❌ Error updating user role:', err)
-            error.value = 'Failed to update user role'
-            return false
-        } finally {
-            loading.value = false
+        } catch (error) {
+            console.error('❌ Error creating user profile:', error)
+            throw error
         }
     }
-    
-    // Sleep log management (admins can delete any log)
-    const deleteSleepLogAsAdmin = async (logId) => {
-        if (!isAdmin.value) {
-            error.value = 'Only admins can delete sleep logs'
-            return false
-        }
-        
-        console.log(`🗑️ Admin deleting sleep log ${logId}`)
-        
+
+    // UPDATE - Update user's last login time
+    const updateLastLogin = async (userId) => {
         try {
-            await deleteDoc(doc(db, sleepLogsCollectionRef, logId))
-            console.log('✅ Sleep log deleted by admin')
-            return true
+            await setDoc(doc(db, usersCollectionRef, userId), {
+                lastLoginAt: new Date()
+            }, { merge: true }) // merge: true preserves existing data
             
-        } catch (err) {
-            console.error('❌ Error deleting sleep log:', err)
-            error.value = 'Failed to delete sleep log'
-            return false
+            console.log('✅ Last login updated for user:', userId)
+            
+        } catch (error) {
+            console.error('❌ Error updating last login:', error)
         }
     }
-    
-    // Format date helper
-    const formatDate = (timestamp) => {
-        if (!timestamp) return 'Unknown'
-        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        })
-    }
-    
-    // Get user by email
-    const getUserByEmail = (email) => {
-        return users.value.find(user => user.email === email)
-    }
-    
-    // Reset error
-    const resetError = () => {
-        error.value = ''
-    }
-    
-    // Set up real-time listeners
-    onMounted(() => {
-        console.log('👥 Setting up users listener')
+
+    // Get all users (for admin dashboard) 
+    const loadAllUsers = () => {
+        console.log('👥 Setting up users real-time listener')
         
-        // Listen to all users
         const usersQuery = query(
             collection(db, usersCollectionRef),
             orderBy('createdAt', 'desc')
         )
-        
+
         onSnapshot(usersQuery, (snapshot) => {
             console.log('👥 Users snapshot received:', snapshot.docs.length, 'users')
-            users.value = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
+            users.value = snapshot.docs.map(doc => ({ 
+                id: doc.id, 
+                ...doc.data() 
             }))
-        }, (err) => {
-            console.error('❌ Error listening to users:', err)
-            error.value = 'Failed to load users'
+            console.log('📊 Users updated:', users.value)
+        }, (error) => {
+            console.error('❌ Error listening to users updates:', error)
         })
+    }
+
+    // Get all sleep logs (for admin dashboard)
+    const loadAllSleepLogs = () => {
+        console.log('🛏️ Setting up all sleep logs real-time listener')
         
-        // Listen to all sleep logs (for admin view)
-        const allLogsQuery = query(
+        const sleepLogsQuery = query(
             collection(db, sleepLogsCollectionRef),
             orderBy('createdAt', 'desc')
         )
-        
-        onSnapshot(allLogsQuery, (snapshot) => {
-            console.log('📊 All sleep logs snapshot received:', snapshot.docs.length, 'logs')
-            allSleepLogs.value = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
+
+        onSnapshot(sleepLogsQuery, (snapshot) => {
+            console.log('🛏️ All sleep logs snapshot received:', snapshot.docs.length, 'logs')
+            allSleepLogs.value = snapshot.docs.map(doc => ({ 
+                id: doc.id, 
+                ...doc.data() 
             }))
-        }, (err) => {
-            console.error('❌ Error listening to all sleep logs:', err)
+            console.log('📊 All sleep logs updated:', allSleepLogs.value)
+        }, (error) => {
+            console.error('❌ Error listening to all sleep logs updates:', error)
         })
+    }
+
+    // Computed statistics
+    const totalUsers = computed(() => {
+        return users.value?.length || 0
     })
-    
+
+    const totalSleepLogs = computed(() => {
+        return allSleepLogs.value?.length || 0
+    })
+
+    const recentUsers = computed(() => {
+        return users.value?.slice(0, 5) || []
+    })
+
+    // Initialize data loading for admin
+    const initializeAdminData = () => {
+        loadAllUsers()
+        loadAllSleepLogs()
+    }
+
     return {
-        // Data
+        // State
         users,
         allSleepLogs,
+        loading,
+        error,
         
         // Computed
-        isAdmin,
         totalUsers,
         totalSleepLogs,
         recentUsers,
         
-        // Functions
-        changeUserRole,
-        deleteSleepLogAsAdmin,
-        formatDate,
-        getUserByEmail,
-        resetError,
-        
-        // State
-        loading,
-        error
+        // Methods
+        createUserProfile,
+        updateLastLogin,
+        initializeAdminData
     }
 }

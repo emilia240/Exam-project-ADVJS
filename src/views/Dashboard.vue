@@ -9,7 +9,7 @@
         ref="welcomeSectionRef"
       />
 
-     <RecentSleepLogs />
+     <RecentSleepLogs @openSleepForm="openSleepForm" />
 
      <SleepInsights />
 

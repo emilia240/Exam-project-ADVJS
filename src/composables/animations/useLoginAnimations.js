@@ -1,10 +1,8 @@
 import { ref } from 'vue'
 import { animate } from 'animejs'
-import { useRouter } from 'vue-router'
 
 
 export function useLoginAnimations() {
-    const router = useRouter()
 
     // Template refs
     const loginCard = ref(null)

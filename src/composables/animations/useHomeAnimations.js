@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { animate, stagger } from 'animejs'
 import { useScrollAnimations } from './shared/useScrollAnimations'
 
@@ -6,14 +5,6 @@ export function useHomeAnimations() {
     // Import shared scroll functionality
     const { createScrollObserver } = useScrollAnimations()
     
-    // Template refs for animations
-/*     const heroText = ref(null)
-    const card1 = ref(null)
-    const card2 = ref(null)
-    const card3 = ref(null)
-    const bannerHeader = ref(null)
-    const didYouKnowIcon = ref(null)
-    const footerHeader = ref(null) */
 
     // Fun hover animations for circles and did-you-know icon
     const setupHoverAnimations = () => {

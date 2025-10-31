@@ -26,7 +26,7 @@
       <div v-if="recentLogs.length === 0" class="empty-state !col-span-full !text-center !py-12">
         <img src="@/assets/img/moon.svg" alt="" class="!w-12 !h-12 !mx-auto !mb-4 !opacity-50">
         <p class="empty-text !mb-4">No sleep logs yet</p>
-        <button @click="$emit('openSleepForm')" class="new-log-button !px-6 !py-3 !rounded-lg !font-medium !transition-all !duration-300 hover:-translate-y-0.5">
+        <button @click="openSleepForm" class="new-log-button !px-6 !py-3 !rounded-lg !font-medium !transition-all !duration-300 hover:-translate-y-0.5">
           Create Your First Log
         </button>
       </div>
@@ -42,8 +42,16 @@ import SleepLogCard from '../SleepLogCard.vue'
 
 const { sleepLogs } = useSleepLogs()
 
+
+
 // Define emits
-defineEmits(['openSleepForm'])
+const emit = defineEmits(['openSleepForm'])
+
+// Methods
+const openSleepForm = () => {
+  // ✅ Emit to parent instead of trying to access ref
+  emit('openSleepForm')
+}
 
 // Computed values
 const recentLogs = computed(() => {

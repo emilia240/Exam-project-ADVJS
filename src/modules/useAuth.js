@@ -2,6 +2,8 @@ import { ref, computed } from 'vue';
 import { firebaseApp } from './firebase';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword  } from 'firebase/auth';
 
+import { doc, setDoc } from "firebase/firestore"
+import { db } from './firebase.js'
 
 
 const auth = getAuth(firebaseApp);
@@ -25,36 +27,94 @@ onAuthStateChanged(auth, (user) => {
     resolveAuthReady() // resolve when auth state is known
 })
 
+// Firestore helper functions directly in useAuth
+const createUserProfile = async (userId, userData) => {
+    console.log('👥 Creating user profile for:', userId, userData)
+    
+    try {
+        const userProfileData = {
+            email: userData.email,
+            userName: userData.userName,
+            birthDate: userData.birthDate,
+            role: userData.role || 'user',
+            createdAt: new Date(),
+            lastLoginAt: new Date(),
+            userId: userId
+        }
+        
+        await setDoc(doc(db, 'users', userId), userProfileData)
+        console.log('✅ User profile created successfully!')
+        return true
+        
+    } catch (error) {
+        console.error('❌ Error creating user profile:', error)
+        throw error
+    }
+}
+
+const updateLastLogin = async (userId) => {
+    try {
+        await setDoc(doc(db, 'users', userId), {
+            lastLoginAt: new Date()
+        }, { merge: true })
+        
+        console.log('✅ Last login updated for user:', userId)
+        
+    } catch (error) {
+        console.error('❌ Error updating last login:', error)
+    }
+}
+
 const login = async (email, password) => {
     console.log('login attempt: ', email);
     loading.value = true
     authError.value= null
+
     try {
-        await signInWithEmailAndPassword(auth, email, password)
-    }
-    catch (err) {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user
+        
+        // ✅ Update last login time
+        await updateLastLogin(user.uid)
+        
+        console.log('✅ Login successful:', user.uid)
+        
+    } catch (err) {
         authError.value = err.message
-    }
-    finally {
+        console.error('❌ Login error:', err)
+    } finally {
         loading.value = false
     }
     
 }
 
-const register = async (email, password) => {
+const register = async (email, password, additionalData = {}) => { // ✅ Accept additional data
     console.log('register attempt: ', email);
     loading.value = true
-    authError.value= null
+    authError.value = null
+    
     try {
-        await createUserWithEmailAndPassword(auth, email, password)
-    }
-    catch (err) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user
+        
+        // ✅ Create user profile in Firestore
+        await createUserProfile(user.uid, {
+            email: email,
+            userName: additionalData.userName,
+            birthDate: additionalData.birthDate,
+            role: additionalData.role || 'user'
+        })
+        
+        console.log('✅ Registration completed successfully!')
+        
+    } catch (err) {
         authError.value = err.message
-    }
-    finally {
+        console.error('❌ Registration error:', err)
+    } finally {
         loading.value = false
     }
 }
+
 
 
 const logout = async(routerInstance) => {
