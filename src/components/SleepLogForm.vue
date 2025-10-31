@@ -88,7 +88,6 @@
 </template>
 
 <script setup>
-// Keep your existing script exactly the same
 import { onMounted, ref, watch } from 'vue'
 import { animate } from 'animejs'
 import { useSleepLogs } from '@/modules/useSleepLogs'

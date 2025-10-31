@@ -27,13 +27,13 @@ export function useUsers() {
     
     // Statistics
 
-   /*  const totalUsers = computed(() => users.value.length)
+    const totalUsers = computed(() => users.value.length)
     const totalSleepLogs = computed(() => allSleepLogs.value.length)
     const recentUsers = computed(() => {
         return users.value
             .sort((a, b) => new Date(b.createdAt?.toDate?.() || b.createdAt) - new Date(a.createdAt?.toDate?.() || a.createdAt))
             .slice(0, 5)
-    }) */
+    }) 
     
     // User management functions
     const changeUserRole = async (userId, newRole) => {
