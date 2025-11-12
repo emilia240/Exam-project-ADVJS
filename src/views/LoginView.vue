@@ -184,9 +184,16 @@ const toggleForm = () => {
 
 // Login function
 const loginUser = async () => {
-  try {
-    await login(email.value, password.value)
-    // If login is successful, redirect will be handled by the watcher
+  
+    try {
+    const userRole = await login(email.value, password.value) //Get user role 
+    
+    // ✅ Route based on role
+    if (userRole === 'admin') {
+      router.push('/admin')
+    } else {
+      router.push('/dashboard')
+    }
   } catch (error) {
     console.error('Login failed:', error)
   }
@@ -199,22 +206,13 @@ const registerUser = async () => {
       userName: regUserName.value,
       birthDate: regBirthDate.value
     })
-    // If registration is successful, redirect will be handled by the watcher
+    // For registration, always go to regular dashboard
+    router.push('/dashboard')
   } catch (error) {
     console.error('Registration failed:', error)
   }
 }
 
-// Watch for successful login/registration and redirect
-watch(isLoggedIn, (newValue) => {
-  if (newValue) {
-    console.log('✅ Login successful, redirecting to dashboard')
-    // Show success message briefly, then redirect
-    setTimeout(() => {
-      router.push('/dashboard')
-    }, 1500)
-  }
-})
 
 // Start animations when component mounts
 onMounted(() => {

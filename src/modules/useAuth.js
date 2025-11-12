@@ -6,6 +6,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore"
 import { db } from './firebase.js'
 
 
+
 const auth = getAuth(firebaseApp);
 
 const currentUser = ref(null);
@@ -72,16 +73,20 @@ const login = async (email, password) => {
 
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        const user = userCredential.user
         
-        // ✅ Update last login time
-        await updateLastLogin(user.uid)
-        
-        console.log('✅ Login successful:', user.uid)
+        // Check if this is admin
+        if (email === 'admin@somnusapp.com') { 
+            console.log('👑 Admin logged in!')
+            return 'admin' // ✅ Return role
+        } else {
+            console.log('👤 Regular user logged in!')
+            return 'user' // ✅ Return role
+        }
         
     } catch (err) {
         authError.value = err.message
         console.error('❌ Login error:', err)
+        throw err
     } finally {
         loading.value = false
     }
@@ -97,12 +102,16 @@ const register = async (email, password, additionalData = {}) => { // ✅ Accept
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         const user = userCredential.user
         
-        // ✅ Create user profile in Firestore
+
+        // Detect admin role BEFORE creating profile
+        const userRole = email === 'admin@somnusapp.com' ? 'admin' : 'user'
+
+        // Create user profile in Firestore
         await createUserProfile(user.uid, {
             email: email,
             userName: additionalData.userName,
             birthDate: additionalData.birthDate,
-            role: additionalData.role || 'user'
+            role: userRole
         })
         
         console.log('✅ Registration completed successfully!')
@@ -162,6 +171,7 @@ export function useAuth() {
         isLoggedIn,
         authError,
         loading,
+        updateLastLogin,
         login,
         logout,
         register,

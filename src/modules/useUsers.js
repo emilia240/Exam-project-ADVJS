@@ -1,12 +1,10 @@
-import { ref, computed, onMounted } from 'vue'
-import { collection, onSnapshot, addDoc, doc, setDoc, query, orderBy, where } from "firebase/firestore"
+import { ref, computed } from 'vue'
+import { collection, onSnapshot, doc, setDoc, query, orderBy } from "firebase/firestore"
 import { db } from './firebase.js'
-import { useAuth } from './useAuth.js'
 
 export function useUsers() {
     console.log('👥 useUsers composable initialized')
 
-    const { currentUser } = useAuth()
     
     // Collections
     const usersCollectionRef = 'users'
@@ -27,7 +25,7 @@ export function useUsers() {
                 email: userData.email,
                 userName: userData.userName,
                 birthDate: userData.birthDate,
-                role: userData.role || 'user', // Default role
+                role: userData.role,
                 createdAt: new Date(),
                 lastLoginAt: new Date(),
                 userId: userId // Store the Firebase Auth UID

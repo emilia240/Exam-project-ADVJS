@@ -21,6 +21,8 @@
 
         <AuthButton :showIcon="true" />
       </template>
+
+    
       
       <!-- List & Detail navigation -->
       <template v-if="navType === 'logs'">
@@ -36,6 +38,12 @@
 
         <AuthButton :showIcon="true" />
       </template>
+
+      <!-- Admin Dashboard navigation -->
+      <template v-if="navType === 'admin'">
+
+        <AuthButton :showIcon="true" />
+      </template>
     </div>
   </nav>
 </template>
@@ -48,7 +56,7 @@ const props = defineProps({
   navType: {
     type: String,
     required: true,
-    validator: (value) => ['dashboard', 'logs'].includes(value)
+    validator: (value) => ['dashboard', 'logs', 'admin'].includes(value)
   }
 })
 

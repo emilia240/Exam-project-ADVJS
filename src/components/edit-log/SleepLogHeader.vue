@@ -34,7 +34,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useAuth } from '../../modules/useAuth.js'
+
 
 // Props
 const props = defineProps({
@@ -66,6 +68,16 @@ const formatTimestamp = (timestamp) => {
   })
 }
 
+
+
+const { updateLastLogin, currentUser } = useAuth()
+
+// Call it when viewing log details
+onMounted(() => {
+  if (currentUser.value) {
+    updateLastLogin(currentUser.value.uid)
+  }
+})
 </script>
 
 <style scoped>
