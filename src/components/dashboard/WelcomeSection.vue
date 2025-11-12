@@ -21,30 +21,64 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useAuth } from '../../modules/useAuth.js'
 
-const { currentUser } = useAuth()
+const { currentUser, getUserProfile } = useAuth()
 
 // Template refs
 const welcomeTitle = ref(null)
 const dashboardLogo = ref(null)
 
-// Methods
+// Store user profile
+const userProfile = ref(null)
+
+// Load user profile using your existing auth system
+const loadUserProfile = async () => {
+  if (!currentUser.value?.uid) return
+  
+  try {
+    userProfile.value = await getUserProfile(currentUser.value.uid)
+  } catch (error) {
+    console.error('❌ Error loading user profile:', error)
+  }
+}
+
+// Get proper username with fallbacks
 const getUserName = () => {
+  // 1st priority: Use userName from profile
+  if (userProfile.value?.userName) {
+    return userProfile.value.userName
+  }
+  
+  // 2nd priority: Extract from email (fallback)
   if (currentUser.value?.email) {
-    // Extract name from email (before @)
     return currentUser.value.email.split('@')[0]
   }
+  
+  // 3rd priority: Default
   return 'Sleeper'
 }
+
+// Load profile when component mounts
+onMounted(() => {
+  if (currentUser.value) {
+    loadUserProfile()
+  }
+})
+
+// Load profile when user becomes available
+watch(currentUser, (newUser) => {
+  if (newUser) {
+    loadUserProfile()
+  }
+}, { immediate: true })
 
 // Expose refs for parent animations
 defineExpose({
   welcomeTitle,
   dashboardLogo
 })
-
 
 </script>
 

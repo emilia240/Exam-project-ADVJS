@@ -2,7 +2,7 @@ import { ref, computed } from 'vue';
 import { firebaseApp } from './firebase';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword  } from 'firebase/auth';
 
-import { doc, setDoc } from "firebase/firestore"
+import { doc, setDoc, getDoc } from "firebase/firestore"
 import { db } from './firebase.js'
 
 
@@ -115,6 +115,26 @@ const register = async (email, password, additionalData = {}) => { // ✅ Accept
     }
 }
 
+const getUserProfile = async (userId) => {
+    console.log('👤 Getting user profile for:', userId)
+    
+    try {
+        const userDoc = await getDoc(doc(db, 'users', userId))
+        
+        if (userDoc.exists()) {
+            console.log('✅ User profile found:', userDoc.data())
+            return userDoc.data()
+        } else {
+            console.log('❌ No user profile found')
+            return null
+        }
+        
+    } catch (error) {
+        console.error('❌ Error getting user profile:', error)
+        return null
+    }
+}
+
 
 
 const logout = async(routerInstance) => {
@@ -144,6 +164,7 @@ export function useAuth() {
         loading,
         login,
         logout,
-        register
+        register,
+        getUserProfile
     }
 }
