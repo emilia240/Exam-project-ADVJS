@@ -5,6 +5,12 @@
 
     <div class="content !pt-20 !md:pt-24 !px-4 !md:px-6 !max-w-4xl !mx-auto">
 
+      <!-- Unsaved Changes Warning -->
+      <div v-if="hasUnsavedChanges" class="unsaved-warning !mt-4 !p-4 rounded-lg text-center border">
+        <p>⚠️ You have unsaved changes. Don't forget to click Save!</p>
+      </div>
+
+
       <!-- Navigation and Actions Header -->
       <div class="header-actions flex items-center justify-between flex-col md:flex-row !my-8 !gap-4 md:!gap-0">
         <!-- Back to Logs -->
@@ -56,11 +62,6 @@
         @update:dreamJournal="markAsChanged"
         @update:tags="markAsChanged"
       />
-
-      <!-- Unsaved Changes Warning -->
-      <div v-if="hasUnsavedChanges" class="unsaved-warning !mt-4 !p-4 rounded-lg text-center border">
-        <p>⚠️ You have unsaved changes. Don't forget to click Save!</p>
-      </div>
 
     </div>
   </div>

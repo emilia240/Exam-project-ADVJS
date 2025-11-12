@@ -15,10 +15,12 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "animejs": "^4.2.0",
+    "chart.js": "^4.5.1",
     "firebase": "^12.2.1",
     "firebase-tools": "^14.16.0",
     "tailwindcss": "^4.1.13",
     "vue": "^3.5.18",
+    "vue-chartjs": "^5.3.3",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
