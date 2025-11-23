@@ -1,8 +1,5 @@
 # 🌙 Somnus Sleep Tracker
 
-> A full-stack Vue 3 sleep tracking application with real-time analytics
-> **Academic Grade: 12/10** ⭐
-
 ## ✨ Live Demo
 [View Live App](https://sleepapp-project.web.app/)
 
